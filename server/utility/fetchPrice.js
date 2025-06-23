@@ -19,10 +19,6 @@ const getPrice = async (url) => {
 
   const html = await page.content();
 
-  //   const rawPrice = await page.$eval(".index_price__cAj0h", (el) =>
-  //     el.innerText.trim()
-  //   );
-
   const match = html.match(/£\s?\d+(?:\.\d{2})?/);
 
   if (match) {
@@ -34,6 +30,45 @@ const getPrice = async (url) => {
   await browser.close();
 };
 
+const generateEmailOptions = ({ email, price, productName = "the item" }) => {
+  const subject = `Price Update: Latest Price for ${productName}`;
+
+  const text = `
+Hello,
+
+We’ve just checked the product you’re monitoring: ${productName}.
+
+Current Price: ${price}
+
+We’ll continue to monitor this item and notify you of any significant changes.
+
+Thank you for choosing PricePulse.
+
+Best regards,  
+The PricePulse Team
+`;
+
+  const html = `
+<div style="font-family: Arial, sans-serif; font-size: 15px; line-height: 1.6; color: #333;">
+  <h2 style="color: #2b2b2b;">Price Update for ${productName}</h2>
+  <p>Hello,</p>
+  <p>We’ve just checked the product you’re monitoring.</p>
+  <p style="font-size: 16px;"><strong>Current Price:</strong> ${price}</p>
+  <p>We’ll continue to monitor this item and notify you of any significant changes.</p>
+  <p style="margin-top: 30px;">Thank you for choosing PricePulse,<br/>The PricePulse Team</p>
+</div>
+`;
+
+  return {
+    from: '"PricePulse Notifications" <no-reply@pricepulse.com>',
+    to: email,
+    subject,
+    text,
+    html,
+  };
+};
+
 module.exports = {
   getPrice,
+  generateEmailOptions,
 };
