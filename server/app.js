@@ -11,6 +11,10 @@ app.get("/", (req, res) => {
   return res.json({ message: "hello world" });
 });
 
+app.get("/api/test", (req, res) => {
+  return res.json({ message: "welcome to price checker" });
+});
+
 app.use("/api/jobs/check-price", priceRoutes);
 
 module.exports = app;

@@ -5,6 +5,8 @@
   "main": "index.js",
   "scripts": {
     "server": "nodemon --env-file=.env server/server.js",
+    "client": "npm run dev --prefix client",
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
     "test": "jest --watchAll"
   },
   "keywords": [],
@@ -20,6 +22,7 @@
     "puppeteer": "^24.10.2"
   },
   "devDependencies": {
+    "concurrently": "^9.2.0",
     "jest": "^30.0.2",
     "supertest": "^7.1.1"
   }
