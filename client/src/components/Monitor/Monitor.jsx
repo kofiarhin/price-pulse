@@ -3,27 +3,26 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useMonitorMutation from "../../hooks/useMonitorMutation";
 
+const testProductUrl =
+  "https://www.popmart.com/gb/products/1064/the-monsters-big-into-energy-series-vinyl-plush-pendant-blind-box";
+const testEmail = "davidkraku60@gmail.com";
+
 const Monitor = () => {
   const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState("");
-  const { mutate, isPending, isSuccess } = useMonitorMutation();
+  const { mutate, data, isPending, isSuccess } = useMonitorMutation();
   const [formData, setFormData] = useState({
-    name: "THE MONSTERS Big into Energy Series-Vinyl Plush Pendant Blind Box",
-    email: "davidkraku69@gmail.com",
-    productUrl:
-      "https://www.popmart.com/gb/products/1064/the-monsters-big-into-energy-series-vinyl-plush-pendant-blind-box",
+    name: "",
+    email: testEmail,
+    productUrl: testProductUrl,
   });
 
   const { name, email, productUrl } = formData;
 
-  if (isSuccess) {
-    navigate("/success");
-  }
-
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (!name || !email || !productUrl) {
+    if (!email || !productUrl) {
       setErrorMessage("please fill out all fields");
       return;
     }
@@ -33,6 +32,22 @@ const Monitor = () => {
       productUrl,
     });
   };
+
+  if (isSuccess) {
+    return (
+      <div className="monitor-success">
+        <img src={data?.imageUrl} alt="" />
+        <div className="text-wrapper">
+          <p> {data?.name} </p>
+          <p>Price: £{data.price} </p>
+          <p>Stock: {data.stockCount ? data?.stockCount : "Not in stock"} </p>
+          <p> {data.description} </p>
+
+          <button>Notify Me When Price Stock Changes</button>
+        </div>
+      </div>
+    );
+  }
 
   if (isPending) {
     return <h1 className="heading center">Loading...</h1>;
@@ -55,17 +70,6 @@ const Monitor = () => {
               name="email"
               value={email}
               placeholder="Enter your email address"
-              onChange={handleChange}
-            />
-          </div>
-
-          <div className="input-group">
-            <label htmlFor="name">Product Name</label>
-            <input
-              type="text"
-              name="name"
-              value={name}
-              placeholder="Enter product name"
               onChange={handleChange}
             />
           </div>

@@ -1,3 +1,20 @@
 #monitor {
   margin-bottom: 2rem;
 }
+
+.monitor-success {
+  width: 800px;
+  max-width: 100%;
+  margin: 0 auto;
+  display: flex;
+  img {
+    width: 200px;
+    margin-right: 1rem;
+  }
+  .text-wrapper {
+    flex: 1;
+    p {
+      margin-bottom: 1rem;
+    }
+  }
+}
