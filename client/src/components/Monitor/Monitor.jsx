@@ -23,7 +23,7 @@ const Monitor = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (!name || !email || productUrl) {
+    if (!name || !email || !productUrl) {
       setErrorMessage("please fill out all fields");
       return;
     }
