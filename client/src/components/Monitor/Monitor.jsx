@@ -9,7 +9,8 @@ const Monitor = () => {
   const [formData, setFormData] = useState({
     name: "test",
     email: "davidkraku69@gmail.com",
-    productUrl: "some product url",
+    productUrl:
+      "https://www.popmart.com/gb/products/1064/the-monsters-big-into-energy-series-vinyl-plush-pendant-blind-box",
   });
 
   const { name, email, productUrl } = formData;
@@ -64,12 +65,12 @@ const Monitor = () => {
           </div>
 
           <div className="input-group">
-            <label htmlFor="name">Product url</label>
+            <label htmlFor="name">Product Link</label>
             <input
               type="text"
               name="productUrl"
               value={productUrl}
-              placeholder="Enter product name"
+              placeholder="eg. https://www.popmart.com/gb/products/1064/the-monsters-big-into-energy-series-vinyl-plush-pendant-blind-box"
               onChange={handleChange}
             />
           </div>

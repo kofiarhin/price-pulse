@@ -7,8 +7,9 @@ const Header = () => {
         <div className="logo">PricePulse</div>
       </Link>
       <nav>
-        <Link>Home</Link>
-        <Link>New Monitor</Link>
+        <Link to="/" className="cta">
+          New Monitor
+        </Link>
       </nav>
     </header>
   );

@@ -6,7 +6,6 @@
 }
 
 body {
-  min-height: 100vh;
   font-family: "Manrope", sans-serif;
   padding-top: 2rem;
   background-color: rgb(28, 28, 28);
@@ -28,7 +27,7 @@ textarea {
 
 // general styling
 .heading {
-  font-size: 2rem;
+  font-size: 1.6rem;
   margin-bottom: 1rem;
   &.center {
     text-align: center;
@@ -37,15 +36,18 @@ textarea {
 
 .container {
   width: 1200px;
-  max-width: 98%;
+  max-width: 96%;
   margin: 0 auto;
 }
 
 .form-wrapper {
   padding: 2rem;
   width: 500px;
-  margin: 0 auto;
   max-width: 100%;
+  margin: 0 auto;
+  form {
+    width: 100%;
+  }
   .input-group {
     margin-bottom: 1rem;
     label {
@@ -67,5 +69,14 @@ textarea {
     width: 100%;
     padding: 1rem 0rem;
     margin-top: 2rem;
+    color: white;
+    font-weight: 800;
+  }
+}
+
+// media queries
+@media (min-width: 800px) {
+  .heading {
+    font-size: 2rem;
   }
 }

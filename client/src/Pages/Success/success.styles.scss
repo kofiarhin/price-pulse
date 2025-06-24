@@ -8,6 +8,15 @@
     text-decoration: none;
     color: white;
     background-color: green;
-    padding: 0.8rem 2rem;
+    padding: 0.8rem 1rem;
+    font-size: 1rem;
+  }
+}
+
+@media (min-width: 800px) {
+  #success {
+    p {
+      font-size: 1.2rem;
+    }
   }
 }
