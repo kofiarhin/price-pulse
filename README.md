@@ -6,8 +6,9 @@
 
 ## Live Demo
 
+Vercel = Frontend: [View Live App](https://price-pulse-six.vercel.app/) 
 Render = Backend: [View Live App](https://price-pulse-kot7.onrender.com/)  
-_Replace this with your actual deployment URL._
+
 
 ---
 
