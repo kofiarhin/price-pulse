@@ -5,10 +5,11 @@ const checkPrice = async (req, res) => {
   try {
     const { name, email, productUrl: url } = req.body;
 
-    await sendEmail({ to: email, subject: "testing mic", text: "some text" });
+    await sendEmail(generateEmailOptions({ name, email }));
+    const price = await getPrice(url);
+    console.log(price);
     return res.json({ message: "message sent" });
 
-    const price = await getPrice(url);
     const emailOptions = generateEmailOptions({ email, price });
     const result = await sendEmail(emailOptions);
     return res.json({
