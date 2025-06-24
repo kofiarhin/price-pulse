@@ -6,7 +6,7 @@
 
 ## Live Demo
 
-[View Live App](https://your-live-demo-link.com)  
+Render = Backend: [View Live App](https://price-pulse-kot7.onrender.com/)  
 _Replace this with your actual deployment URL._
 
 ---
