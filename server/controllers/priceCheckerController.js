@@ -1,13 +1,20 @@
 const sendEmail = require("../utility/sendEmail");
-const { getPrice, generateEmailOptions } = require("../utility/helper");
+const { generateEmailOptions } = require("../utility/emailServices");
+const { getProductInfo } = require("../utility/helper");
 
 const checkPrice = async (req, res) => {
   try {
     const { name, email, productUrl: url } = req.body;
 
-    const result = await getPrice(url);
-    const emailOptions = generateEmailOptions({ email, price: result.price });
+    const result = await getProductInfo(url);
+    const emailOptions = generateEmailOptions({
+      name: result.name,
+      email,
+      url,
+    });
+    console.log(emailOptions);
     await sendEmail(emailOptions);
+    console.log("email sent");
     return res.json({ ...result });
 
     return res.json({

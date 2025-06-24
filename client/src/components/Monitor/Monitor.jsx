@@ -42,8 +42,6 @@ const Monitor = () => {
           <p>Price: £{data.price} </p>
           <p>Stock: {data.stockCount ? data?.stockCount : "Not in stock"} </p>
           <p> {data.description} </p>
-
-          <button>Notify Me When Price Stock Changes</button>
         </div>
       </div>
     );
