@@ -8,7 +8,7 @@ const Monitor = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const { mutate, isPending, isSuccess } = useMonitorMutation();
   const [formData, setFormData] = useState({
-    name: "test",
+    name: "THE MONSTERS Big into Energy Series-Vinyl Plush Pendant Blind Box",
     email: "davidkraku69@gmail.com",
     productUrl:
       "https://www.popmart.com/gb/products/1064/the-monsters-big-into-energy-series-vinyl-plush-pendant-blind-box",
