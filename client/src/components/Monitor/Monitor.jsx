@@ -5,6 +5,7 @@ import useMonitorMutation from "../../hooks/useMonitorMutation";
 
 const Monitor = () => {
   const navigate = useNavigate();
+  const [errorMessage, setErrorMessage] = useState("");
   const { mutate, isPending, isSuccess } = useMonitorMutation();
   const [formData, setFormData] = useState({
     name: "test",
@@ -21,6 +22,11 @@ const Monitor = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    if (!name || !email || productUrl) {
+      setErrorMessage("please fill out all fields");
+      return;
+    }
     mutate({
       name,
       email,
@@ -74,6 +80,7 @@ const Monitor = () => {
               onChange={handleChange}
             />
           </div>
+          <p className="error"> {errorMessage ? errorMessage : ""} </p>
           <button>Submit</button>
         </form>
       </div>
