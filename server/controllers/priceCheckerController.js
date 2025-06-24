@@ -12,8 +12,8 @@ const checkPrice = async (req, res) => {
       email,
       url,
     });
-    console.log(emailOptions);
-    await sendEmail(emailOptions);
+    // console.log(emailOptions);
+    // await sendEmail(emailOptions);
     console.log("email sent");
     return res.json({ ...result });
 
