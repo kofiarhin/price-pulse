@@ -6,9 +6,9 @@ const checkPrice = async (req, res) => {
   try {
     const { name, email, productUrl: url } = req.body;
 
-    return res.json({ message: "testing mic one two" });
-
     const result = await getProductInfo(url);
+
+    return res.json({ ...result });
 
     // console.log(emailOptions);
     // await sendEmail(emailOptions);
