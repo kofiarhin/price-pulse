@@ -1,28 +1,21 @@
-import { useQuery } from "@tanstack/react-query";
-
-const test = async () => {
-  const res = await fetch("/api/test");
-  const data = await res.json();
-  if (!res.ok) {
-    throw new Error(data.message || "Fetch failed");
-  }
-  return data;
-};
-
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Header from "./components/Header/Header";
+import Home from "./Pages/Home/Home";
+import Success from "./Pages/Success/Success";
+import ErrorPage from "./Pages/ErrorPage/ErrorPage";
+// App
 const App = () => {
-  const { data, isLoading, error } = useQuery({
-    queryKey: ["test"], // ✅ Fixed: Added comma
-    queryFn: test,
-  });
-
-  if (isLoading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error.message}</p>;
-
   return (
-    <div>
-      <h1 className="heading center">Hello World</h1>
-      <pre>{JSON.stringify(data, null, 2)}</pre>
-    </div>
+    <Router>
+      <div className="container">
+        <Header />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/success" element={<Success />} />
+          <Route path="/error" element={<ErrorPage />} />
+        </Routes>
+      </div>
+    </Router>
   );
 };
 

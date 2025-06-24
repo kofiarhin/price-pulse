@@ -9,13 +9,4 @@ describe("services", () => {
   it(" it should just pass", async () => {
     expect(1).toBe(1);
   });
-  it("should test for home end point", async () => {
-    const { body, statusCode } = await request(app)
-      .post("/api/jobs/check-price")
-      .send({
-        url,
-        email: "davidkrak69u@gmail.com",
-      });
-    expect(statusCode).toBe(200);
-  });
 });

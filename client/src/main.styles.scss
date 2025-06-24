@@ -8,12 +8,64 @@
 body {
   min-height: 100vh;
   font-family: "Manrope", sans-serif;
+  padding-top: 2rem;
+  background-color: rgb(28, 28, 28);
+  color: white;
+}
+a {
+  text-decoration: none;
+}
+button {
+  border: none;
+  cursor: pointer;
+  outline: none;
+}
+
+input,
+textarea {
+  font-size: 16px;
 }
 
 // general styling
 .heading {
   font-size: 2rem;
+  margin-bottom: 1rem;
   &.center {
     text-align: center;
+  }
+}
+
+.container {
+  width: 1200px;
+  max-width: 98%;
+  margin: 0 auto;
+}
+
+.form-wrapper {
+  padding: 2rem;
+  width: 500px;
+  margin: 0 auto;
+  max-width: 100%;
+  .input-group {
+    margin-bottom: 1rem;
+    label {
+      display: block;
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
+    }
+    input {
+      display: block;
+      width: 100%;
+      padding: 0.8rem 0rem;
+      text-indent: 20px;
+    }
+  }
+
+  button {
+    background-color: green;
+    display: block;
+    width: 100%;
+    padding: 1rem 0rem;
+    margin-top: 2rem;
   }
 }
