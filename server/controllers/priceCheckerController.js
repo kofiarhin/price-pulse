@@ -8,9 +8,9 @@ const checkPrice = async (req, res) => {
 
     const result = await getProductInfo(url);
     const emailOptions = generateEmailOptions({
-      name: result.name,
       email,
-      url,
+      name: result?.name,
+      url: result?.imageUrl,
     });
     // console.log(emailOptions);
     // await sendEmail(emailOptions);
