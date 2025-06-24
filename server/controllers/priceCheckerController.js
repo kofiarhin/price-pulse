@@ -7,11 +7,7 @@ const checkPrice = async (req, res) => {
     const { name, email, productUrl: url } = req.body;
 
     const result = await getProductInfo(url);
-    const emailOptions = generateEmailOptions({
-      email,
-      name: result?.name,
-      url: result?.imageUrl,
-    });
+
     // console.log(emailOptions);
     // await sendEmail(emailOptions);
     console.log("email sent");
