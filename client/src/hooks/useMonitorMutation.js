@@ -1,8 +1,13 @@
 import { useMutation } from "@tanstack/react-query";
 
 const create = async (payload) => {
+  const isDev = import.meta.env.DEV;
+  const baseUrl = "https://price-pulse-kot7.onrender.com";
+  const url = isDev
+    ? "/api/jobs/check-price"
+    : `${baseUrl}/api/jobs/check-price`;
   try {
-    const res = await fetch("/api/jobs/check-price", {
+    const res = await fetch(url, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
