@@ -35,13 +35,17 @@ const Monitor = () => {
 
   if (isSuccess) {
     return (
-      <div className="monitor-success">
-        <img src={data?.imageUrl} alt="" />
-        <div className="text-wrapper">
-          <p> {data?.name} </p>
-          <p>Price: £{data.price} </p>
-          <p>Stock: {data.stockCount ? data?.stockCount : "Not in stock"} </p>
-          <p> {data.description} </p>
+      <div className="page">
+        <div className="monitor-success">
+          <img src={data?.imageUrl} alt="" />
+          <div className="text-wrapper">
+            <p> {data?.name} </p>
+            <p>Price: £{data.price} </p>
+            <p>Stock: {data.stockCount ? data?.stockCount : "Not in stock"} </p>
+            <p> {data.description} </p>
+
+            <button>Notify Me When Price Stock Changes</button>
+          </div>
         </div>
       </div>
     );
