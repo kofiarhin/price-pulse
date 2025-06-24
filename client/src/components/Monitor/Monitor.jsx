@@ -5,7 +5,7 @@ import useMonitorMutation from "../../hooks/useMonitorMutation";
 
 const testProductUrl =
   "https://www.popmart.com/gb/products/1064/the-monsters-big-into-energy-series-vinyl-plush-pendant-blind-box";
-const testEmail = "davidkraku60@gmail.com";
+const testEmail = "davidkraku69@gmail.com";
 
 const Monitor = () => {
   const navigate = useNavigate();
