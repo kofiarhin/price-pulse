@@ -9,6 +9,11 @@
     "dev": "concurrently \"npm run server\" \"npm run client\"",
     "test": "jest server --watchAll"
   },
+  "jest": {
+    "testTimeout": 20000,
+    "detectOpenHandles": true,
+    "forceExit": true
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
