@@ -25,6 +25,7 @@
     "mongoose": "^8.16.0",
     "node-cron": "^4.1.1",
     "nodemailer": "^7.0.3",
+    "playwright": "^1.53.1",
     "puppeteer": "^19.11.1"
   },
   "devDependencies": {
