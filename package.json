@@ -7,7 +7,7 @@
     "server": "nodemon --env-file=.env server/server.js",
     "client": "npm run dev --prefix client",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
-    "postinstall": "npm puppeteer browsers install chrome",
+    "postinstall": "npx puppeteer browsers install chrome",
     "test": "jest server --watchAll"
   },
   "jest": {
