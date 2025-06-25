@@ -29,7 +29,7 @@ const Monitor = () => {
     mutate({
       name,
       email,
-      productUrl,
+      url: productUrl,
     });
   };
 
