@@ -2,6 +2,12 @@ const { PlaywrightCrawler } = require("crawlee");
 const sendEmail = require("./server/services/sendEmail");
 
 const crawler = new PlaywrightCrawler({
+  launchContext: {
+    launchOptions: {
+      headless: true,
+      args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage', '--disable-gpu'],
+    },
+  },
   requestHandler: async ({ page, request, log }) => {
     await page.waitForLoadState("domcontentloaded");
 
@@ -72,9 +78,8 @@ const crawler = new PlaywrightCrawler({
       console.log("item in stock");
       await sendEmail({
         subject: `IN STOCK (L): ${title}`,
-        text: `Large is in stock.\n\n${title}\nPrice: ${currency || ""} ${
-          price ?? ""
-        }\n${request.url}`,
+        text: `Large is in stock.\n\n${title}\nPrice: ${currency || ""} ${price ?? ""
+          }\n${request.url}`,
         html: `
           <h2>Large is in stock</h2>
           <p><strong>${title}</strong></p>

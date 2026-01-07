@@ -122,7 +122,7 @@ const closePopups = async (page) => {
       .locator(sel)
       .first()
       .click({ timeout: 1200 })
-      .catch(() => {});
+      .catch(() => { });
   }
 };
 
@@ -282,7 +282,7 @@ const extractImages = async (page, requestUrl, schemaProduct) => {
 const extractSizes = async (page) => {
   await page
     .waitForSelector("ul.swatches.size", { timeout: 30000 })
-    .catch(() => {});
+    .catch(() => { });
 
   const sizes = await page
     .$$eval("ul.swatches.size li", (lis) =>
@@ -305,11 +305,11 @@ const extractSizes = async (page) => {
 
           return size
             ? {
-                size,
-                inStock: !isUnavailable,
-                selected: !!isSelected,
-                hint: titleAttr || null,
-              }
+              size,
+              inStock: !isUnavailable,
+              selected: !!isSelected,
+              hint: titleAttr || null,
+            }
             : null;
         })
         .filter(Boolean)
@@ -465,6 +465,7 @@ const main = async () => {
     launchContext: {
       launchOptions: {
         headless: HEADLESS,
+        args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage', '--disable-gpu'],
       },
     },
 
@@ -567,7 +568,7 @@ const main = async () => {
         const priceEl = page
           .locator('.product-price [itemprop="price"]')
           .first();
-        await priceEl.waitFor({ timeout: 30000 }).catch(() => {});
+        await priceEl.waitFor({ timeout: 30000 }).catch(() => { });
 
         const priceRaw =
           (await priceEl.getAttribute("content").catch(() => null)) ||
@@ -642,20 +643,20 @@ const main = async () => {
               tile?.list?.value != null
                 ? Number(tile.list.value)
                 : tile?.listPrice?.value != null
-                ? Number(tile.listPrice.value)
-                : null,
+                  ? Number(tile.listPrice.value)
+                  : null,
             sale:
               tile?.sale?.value != null
                 ? Number(tile.sale.value)
                 : tile?.salePrice?.value != null
-                ? Number(tile.salePrice.value)
-                : null,
+                  ? Number(tile.salePrice.value)
+                  : null,
             discount:
               tile?.discount != null
                 ? Number(tile.discount)
                 : tile?.discountPrice != null
-                ? Number(tile.discountPrice)
-                : null,
+                  ? Number(tile.discountPrice)
+                  : null,
             formatted:
               tile?.price?.formatted || tile?.price?.formattedValue || null,
           },
@@ -665,8 +666,8 @@ const main = async () => {
             (tile?.inStock === true
               ? "InStock"
               : tile?.inStock === false
-              ? "OutOfStock"
-              : null),
+                ? "OutOfStock"
+                : null),
 
           media: {
             primaryImage,
@@ -683,15 +684,15 @@ const main = async () => {
 
           ...(DEBUG
             ? {
-                debug: {
-                  descSource,
-                  descLength,
-                  schemaDescWasJunk,
-                  filteredImageCount,
-                  tile,
-                  schemaProduct,
-                },
-              }
+              debug: {
+                descSource,
+                descLength,
+                schemaDescWasJunk,
+                filteredImageCount,
+                tile,
+                schemaProduct,
+              },
+            }
             : {}),
         };
 
