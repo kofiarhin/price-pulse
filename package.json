@@ -6,12 +6,10 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "server": "nodemon server/server.js",
     "start": "node server/server.js",
+    "prestart": "npx playwright install chromium",
+    "postinstall": "npx playwright install chromium",
     "price-alert": "node boohooAlert.js"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
   "dependencies": {
     "cors": "^2.8.5",
     "crawlee": "^3.15.3",
