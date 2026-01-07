@@ -5,7 +5,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "server": "nodemon server/server.js",
-    "start": "node server/server.js"
+    "start": "node server/server.js",
+    "price-alert": "node boohooAlert.js"
   },
   "keywords": [],
   "author": "",
