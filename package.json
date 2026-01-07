@@ -2,11 +2,13 @@
   "name": "price-pulse",
   "version": "1.0.0",
   "main": "index.js",
+  "engines": {
+    "node": "22.x"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "server": "nodemon server/server.js",
     "start": "node server/server.js",
-    "prestart": "npx playwright install chromium",
     "postinstall": "npx playwright install chromium",
     "price-alert": "node boohooAlert.js"
   },
