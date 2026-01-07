@@ -21,5 +21,6 @@ libxrender1
 libxshmfence1
 libxss1
 libxtst6
+libasound2
 fonts-liberation
 ca-certificates
