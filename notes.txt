@@ -1,0 +1,26 @@
+{
+  "_id": "ObjectId",
+  "canonicalKey": "boohoo:3f8a9c...",
+  "store": "boohoo",
+  "storeName": "Boohoo",
+  "title": "Black Oversized Hoodie",
+  "price": 12.99,
+  "currency": "GBP",
+  "originalPrice": 29.99,
+  "discountPercent": 57,
+  "image": "https://...jpg",
+  "images": ["https://...jpg"],
+  "productUrl": "https://www....",
+  "saleUrl": "https://www....",
+  "category": "hoodies",
+  "gender": "women",
+  "inStock": true,
+  "status": "active",
+  "lastSeenAt": "2026-01-14T10:00:00.000Z",
+  "createdAt": "2026-01-14T10:00:00.000Z",
+  "updatedAt": "2026-01-14T16:00:00.000Z"
+}
+
+
+//zara sales url
+https://www.prettylittlething.com/sale.html?page=1
