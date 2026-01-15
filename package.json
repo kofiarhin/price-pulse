@@ -11,7 +11,7 @@
     "start": "node server/server.js",
     "postinstall": "npx playwright install chromium",
     "price-alert": "node boohooAlert.js",
-    "store-crawler": "node server/crawlers/storeCrawlers.js"
+    "scrappers": "node server/crawlers/storeCrawlers.js"
   },
   "dependencies": {
     "cors": "^2.8.5",

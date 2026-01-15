@@ -1,51 +1,135 @@
-// server/crawlers/storeCrawlers.js
 require("dotenv").config();
 const mongoose = require("mongoose");
+const crypto = require("crypto");
 
-const Product = require("../models/product.model"); // keep your current name/path
+const Product = require("../models/product.model");
 const PriceHistory = require("../models/pricehistory.model");
 
+// Scraper Imports
+// const { runZaraCrawl } = require("../scrappers/zara.scraper"); // ✅ MVP: removed
 const { runPltCrawl } = require("../scrappers/plt.scraper");
+const { runAsosCrawl } = require("../scrappers/asos.scraper");
+const { runBoohooCrawl } = require("../scrappers/boohoo.scraper");
+
+// --- UTILITIES ---
+
+const sha1 = (str) => crypto.createHash("sha1").update(str).digest("hex");
+
+const normalizeUrl = (rawUrl) => {
+  try {
+    const u = new URL(rawUrl);
+    u.hash = "";
+    [
+      "utm_source",
+      "utm_medium",
+      "utm_campaign",
+      "utm_term",
+      "utm_content",
+      "affid",
+      "cmp",
+      "kid",
+    ].forEach((k) => u.searchParams.delete(k));
+    return u.toString();
+  } catch {
+    return rawUrl;
+  }
+};
+
+const makeCanonicalKey = ({ store, productUrl }) =>
+  `${store}:${sha1(normalizeUrl(productUrl))}`;
 
 const connectDB = async () => {
   if (mongoose.connection.readyState === 1) return;
+  if (!process.env.MONGO_URI) throw new Error("Missing MONGO_URI in .env");
   await mongoose.connect(process.env.MONGO_URI);
+};
+
+const isValidUrl = (u) => typeof u === "string" && /^https?:\/\//i.test(u);
+
+const isPdpUrl = (u) => {
+  if (!isValidUrl(u)) return false;
+  try {
+    const url = new URL(u);
+    const p = url.pathname.toLowerCase();
+    const ok =
+      p.endsWith(".html") || /\/(p|product|products|prd)\/[^/]+/.test(p);
+    if (!ok) return false;
+
+    const blocked = [
+      "/sale",
+      "/search",
+      "/bag",
+      "/cart",
+      "/account",
+      "/login",
+      "/help",
+    ];
+    if (blocked.some((x) => p === x || p.startsWith(x + "/"))) return false;
+    return true;
+  } catch {
+    return /\.html/i.test(u);
+  }
+};
+
+// --- CORE LOGIC ---
+
+const sanitizeProducts = (products = [], { storeKey, fallbackSaleUrl }) => {
+  return products
+    .map((p) => {
+      if (!p) return null;
+
+      const productUrl = normalizeUrl(p.productUrl);
+      const saleUrl = normalizeUrl(p.saleUrl || fallbackSaleUrl);
+
+      const out = {
+        ...p,
+        canonicalKey:
+          p.canonicalKey || makeCanonicalKey({ store: storeKey, productUrl }),
+        store: p.store || storeKey,
+        storeName:
+          p.storeName ||
+          (storeKey === "prettylittlething" ? "PrettyLittleThing" : storeKey),
+        productUrl,
+        saleUrl,
+        image: p.image || (p.images && p.images[0]),
+        currency: p.currency || "GBP",
+      };
+
+      if (
+        !out.title ||
+        typeof out.price !== "number" ||
+        !out.image ||
+        !isPdpUrl(out.productUrl)
+      ) {
+        return null;
+      }
+
+      return out;
+    })
+    .filter(Boolean);
 };
 
 const upsertProducts = async (products = []) => {
   if (!products.length) return { inserted: 0, updated: 0, total: 0 };
+  const now = new Date();
 
   const ops = products.map((p) => ({
     updateOne: {
       filter: { canonicalKey: p.canonicalKey },
       update: {
-        $set: { ...p, updatedAt: new Date() },
-        $setOnInsert: { createdAt: new Date() },
+        $set: { ...p, status: "active", inStock: true, lastSeenAt: now },
+        $setOnInsert: { createdAt: now },
       },
       upsert: true,
     },
   }));
 
   const res = await Product.bulkWrite(ops, { ordered: false });
-
   return {
     inserted: res.upsertedCount || 0,
     updated: res.modifiedCount || 0,
     total: products.length,
   };
-};
-
-const markMissingInactive = async ({ store, seenKeys }) => {
-  if (!store) return { markedInactive: 0 };
-  if (!Array.isArray(seenKeys) || !seenKeys.length)
-    return { markedInactive: 0 };
-
-  const res = await Product.updateMany(
-    { store, status: "active", canonicalKey: { $nin: seenKeys } },
-    { $set: { status: "inactive", inStock: false, updatedAt: new Date() } }
-  );
-
-  return { markedInactive: res.modifiedCount || 0 };
 };
 
 const writePriceHistoryAndDetectDrops = async ({
@@ -55,118 +139,118 @@ const writePriceHistoryAndDetectDrops = async ({
 }) => {
   if (!products.length) return { historyInserted: 0, drops: 0 };
 
-  // grab previous product prices in ONE query (fast + good enough for alerts)
-  const keys = products.map((p) => p.canonicalKey).filter(Boolean);
-
-  const prev = await Product.find(
+  const keys = products.map((p) => p.canonicalKey);
+  const prevProducts = await Product.find(
     { canonicalKey: { $in: keys } },
     { canonicalKey: 1, price: 1 }
   ).lean();
+  const prevMap = new Map(prevProducts.map((p) => [p.canonicalKey, p.price]));
 
-  const prevMap = new Map(prev.map((p) => [p.canonicalKey, p.price]));
+  const historyDocs = products.map((p) => ({
+    ...p,
+    runId,
+    seenAt,
+    originalPrice: p.originalPrice ?? null,
+  }));
 
-  const drops = [];
-  const historyDocs = [];
-
-  for (const p of products) {
+  let drops = 0;
+  products.forEach((p) => {
     const prevPrice = prevMap.get(p.canonicalKey);
+    if (prevPrice && p.price < prevPrice) drops++;
+  });
 
-    if (
-      typeof prevPrice === "number" &&
-      typeof p.price === "number" &&
-      p.price < prevPrice
-    ) {
-      drops.push({
-        canonicalKey: p.canonicalKey,
-        store: p.store,
-        title: p.title,
-        from: prevPrice,
-        to: p.price,
-        productUrl: p.productUrl,
-        seenAt,
-        runId,
-      });
-    }
+  try {
+    await PriceHistory.insertMany(historyDocs, { ordered: false });
+  } catch (err) {}
 
-    historyDocs.push({
-      canonicalKey: p.canonicalKey,
-      store: p.store,
-      price: p.price,
-      originalPrice: p.originalPrice ?? null,
-      discountPercent: p.discountPercent ?? null,
-      currency: p.currency || "GBP",
-      seenAt,
-      runId,
-    });
-  }
+  return { historyInserted: historyDocs.length, drops };
+};
 
-  // insert price history (deduped by {canonicalKey, runId})
-  let historyInserted = 0;
-  if (historyDocs.length) {
-    try {
-      const inserted = await PriceHistory.insertMany(historyDocs, {
-        ordered: false,
-      });
-      historyInserted = inserted.length;
-    } catch (err) {
-      // swallow duplicate key errors from re-running same runId
-      // but still count what got inserted if mongoose provides it
-      if (err?.insertedDocs?.length) historyInserted = err.insertedDocs.length;
-    }
-  }
+const runStore = async ({ storeKey, crawlFn, startUrls }) => {
+  const runId = `${storeKey}:${Date.now()}`;
+  const seenAt = new Date();
 
-  // for now: just log drops; next step is saving alerts + sending emails
-  if (drops.length) {
-    console.log(
-      `PRICE DROPS ✅ (${drops.length})`,
-      drops.slice(0, 5).map((d) => ({
-        title: d.title,
-        from: d.from,
-        to: d.to,
-      }))
-    );
-  }
+  console.log(`\n🕵️  CRAWLING: ${storeKey}...`);
+  const rawProducts = await crawlFn({ startUrls });
 
-  return { historyInserted, drops: drops.length };
+  const products = sanitizeProducts(rawProducts, {
+    storeKey,
+    fallbackSaleUrl: startUrls ? startUrls[0] : null,
+  });
+
+  const history = await writePriceHistoryAndDetectDrops({
+    products,
+    runId,
+    seenAt,
+  });
+  const upsert = await upsertProducts(products);
+
+  const seenKeys = products.map((p) => p.canonicalKey);
+  const inactive = await Product.updateMany(
+    { store: storeKey, status: "active", canonicalKey: { $nin: seenKeys } },
+    { $set: { status: "inactive", inStock: false } }
+  );
+
+  return {
+    store: storeKey,
+    ...upsert,
+    markedInactive: inactive.modifiedCount,
+    ...history,
+  };
 };
 
 const run = async () => {
   await connectDB();
+  const summaries = [];
 
-  const runId = `plt:${Date.now()}`; // unique per run
-  const seenAt = new Date();
+  console.log("🚀 Starting Sequential Crawl Process...");
 
-  const result = await runPltCrawl();
+  // 1. ✅ PrettyLittleThing
+  summaries.push(
+    await runStore({
+      storeKey: "prettylittlething",
+      crawlFn: runPltCrawl,
+      startUrls: ["https://www.prettylittlething.com/sale.html"],
+    })
+  );
 
-  // 1) price history + drop detection (uses previous Product.price)
-  const historySummary = await writePriceHistoryAndDetectDrops({
-    products: result,
-    runId,
-    seenAt,
-  });
+  // 2. ✅ ASOS
+  summaries.push(
+    await runStore({
+      storeKey: "asos",
+      crawlFn: runAsosCrawl,
+      startUrls: [
+        "https://www.asos.com/women/sale/cat/?cid=7046",
+        "https://www.asos.com/men/sale/cat/?cid=8409",
+      ],
+    })
+  );
 
-  // 2) upsert products (reactivation is automatic because scraper sets active/inStock)
-  const upsertSummary = await upsertProducts(result);
+  // 3. ✅ Boohoo
+  summaries.push(
+    await runStore({
+      storeKey: "boohooman",
+      crawlFn: runBoohooCrawl,
+      startUrls: ["https://www.boohooman.com/mens/sale"],
+    })
+  );
 
-  // 3) mark missing inactive
-  const store = result?.[0]?.store || "prettylittlething";
-  const seenKeys = result.map((p) => p.canonicalKey).filter(Boolean);
-  const inactiveSummary = await markMissingInactive({ store, seenKeys });
-
-  console.log("PLT ✅", {
-    ...upsertSummary,
-    ...inactiveSummary,
-    ...historySummary,
-    runId,
-  });
+  console.log("\n=== STORE RUN SUMMARY ✅ ===");
+  summaries.forEach((s) =>
+    console.log(
+      `${s.store.toUpperCase()}: Total ${s.total} | New ${
+        s.inserted
+      } | Updated ${s.updated} | Drops ${s.drops}`
+    )
+  );
 
   await mongoose.connection.close();
 };
 
 run().catch(async (err) => {
   console.error("Crawler failed ❌", err);
-  try {
+  if (mongoose.connection.readyState !== 0) {
     await mongoose.connection.close();
-  } catch {}
+  }
   process.exit(1);
 });
