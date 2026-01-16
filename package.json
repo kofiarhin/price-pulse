@@ -11,7 +11,9 @@
     "start": "node server/server.js",
     "postinstall": "npx playwright install chromium",
     "price-alert": "node boohooAlert.js",
-    "scrappers": "node server/crawlers/storeCrawlers.js"
+    "scrappers": "node server/crawlers/storeCrawlers.js",
+    "client": "npm run dev --prefix client",
+    "dev": "concurrently \"npm run server\" \"npm run client\""
   },
   "dependencies": {
     "cors": "^2.8.5",
@@ -22,5 +24,8 @@
     "mongoose": "^9.1.2",
     "nodemailer": "^7.0.12",
     "playwright": "^1.57.0"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1"
   }
 }

@@ -24,3 +24,25 @@
 
 //zara sales url
 https://www.prettylittlething.com/sale.html?page=1
+
+
+e:    https://static.zara.net/assets/public/5277/7f81/c8d54c6388dd/3b1f942956e5/05755156401-p/05755156401-p.jpg?ts=1764071556754&w=560
+│ URL:      https://www.zara.com/uk/en/plain-knit-jumper-p05755156.html
+└─────────────────────────────────────────────────
+
+┌─── ZARA PRODUCT [11/200]
+│ Title:    ZW COLLECTION WO
+
+
+
+└─────────────────────────────────────────────────
+
+┌─── ZARA PRODUCT [4/200]
+│ Title:    SHORT GAUZE DRESS WITH LACE...
+│ Price:    £6.89 ➔ -70% (Was: £22.99)
+│ Sizes:    [ NONE ]
+│ Color:    Black
+│ Image:    https://static.zara.net/assets/public/8354/de68/f9a3477e954d/f4858a17b5bb/00881319800-p/00881319800-p.jpg?ts=1753261588721&w=270
+│ ImagesCount: 12
+│ Images:   https://static.zara.net/assets/public/8354/de68/f9a3477e954d/f4858a17b5bb/00881319800-p/00881319800-p.jpg?ts=1753261588721&w=270 | https://static.zara.net/assets/public/0892/6621/adc14d35b343/a047d5f0cd2e/00881319800-a1/00881319800-a1.jpg?ts=1753261588914&w=270 | https://static.zara.net/assets/public/ec47/fc53/4f074c61aeec/add6468f58d6/00881319800-a2/00881319800-a2.jpg?ts=1753261588640&w=270 | https://static.zara.net/assets/public/a9d9/a0ea/51c64eb192c5/f5548f733160/00881319800-a3/00881319800-a3.jpg?ts=1753261589126&w=270 | https://static.zara.net/assets/public/9c88/3140/480148619ec0/be8a53c7edd3/00881319800-a4/00881319800-a4.jpg?ts=1753261589030&w=270│ URL:      https://www.zara.com/uk/en/short-gauze-dress-with-lace-p00881319.html
+└─────────────────────────────────────────────────
