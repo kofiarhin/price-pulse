@@ -3,6 +3,8 @@ import { Link, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import "./product-details.styles.scss";
 
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+
 const COLOR_MAP = {
   black: "#0b0b0b",
   white: "#f5f5f5",
@@ -44,7 +46,7 @@ const formatMoney = (currency, value) => {
 };
 
 const fetchProductById = async (id) => {
-  const res = await fetch(`http://localhost:5000/api/products/${id}`);
+  const res = await fetch(`${API_URL}/api/products/${id}`);
   if (!res.ok) throw new Error("Failed to fetch product");
   return res.json();
 };
