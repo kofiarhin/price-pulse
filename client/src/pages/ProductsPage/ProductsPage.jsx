@@ -3,6 +3,8 @@ import { useQuery } from "@tanstack/react-query";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import "./products.styles.scss";
 
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+
 const buildQueryString = (obj) => {
   const params = new URLSearchParams();
   Object.entries(obj).forEach(([k, v]) => {
@@ -17,7 +19,7 @@ const buildQueryString = (obj) => {
 
 const fetchProducts = async ({ search, category, sort, page, limit }) => {
   const qs = buildQueryString({ search, category, sort, page, limit });
-  const res = await fetch(`http://localhost:5000/api/products${qs}`);
+  const res = await fetch(`${API_URL}/api/products${qs}`);
   if (!res.ok) throw new Error("Failed to fetch products");
   return res.json(); // { items, pagination }
 };
@@ -130,6 +132,9 @@ export default function ProductsPage() {
                 <span className="pp-dotlive"> • updating…</span>
               ) : null}
             </p>
+            <p className="pp-api">
+              API: <span className="pp-api-url">{API_URL}</span>
+            </p>
           </div>
 
           <form className="pp-searchbar" onSubmit={onSearch}>
@@ -163,36 +168,28 @@ export default function ProductsPage() {
             </button>
             <button
               type="button"
-              className={`pp-chip ${
-                categoryParam === "women" ? "is-active" : ""
-              }`}
+              className={`pp-chip ${categoryParam === "women" ? "is-active" : ""}`}
               onClick={() => setParamAndGo({ category: "women", page: 1 })}
             >
               Women
             </button>
             <button
               type="button"
-              className={`pp-chip ${
-                categoryParam === "men" ? "is-active" : ""
-              }`}
+              className={`pp-chip ${categoryParam === "men" ? "is-active" : ""}`}
               onClick={() => setParamAndGo({ category: "men", page: 1 })}
             >
               Men
             </button>
             <button
               type="button"
-              className={`pp-chip ${
-                categoryParam === "kids" ? "is-active" : ""
-              }`}
+              className={`pp-chip ${categoryParam === "kids" ? "is-active" : ""}`}
               onClick={() => setParamAndGo({ category: "kids", page: 1 })}
             >
               Kids
             </button>
             <button
               type="button"
-              className={`pp-chip ${
-                categoryParam === "home" ? "is-active" : ""
-              }`}
+              className={`pp-chip ${categoryParam === "home" ? "is-active" : ""}`}
               onClick={() => setParamAndGo({ category: "home", page: 1 })}
             >
               Home
@@ -303,9 +300,7 @@ export default function ProductsPage() {
 
                       <div className="pp-card-foot">
                         <span
-                          className={`pp-stock ${
-                            p.inStock ? "is-in" : "is-out"
-                          }`}
+                          className={`pp-stock ${p.inStock ? "is-in" : "is-out"}`}
                         >
                           {p.inStock ? "In stock" : "Out of stock"}
                         </span>
