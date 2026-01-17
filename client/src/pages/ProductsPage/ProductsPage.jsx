@@ -1,4 +1,5 @@
-import React, { useMemo, useState } from "react";
+// client/src/pages/ProductsPage/ProductsPage.jsx
+import React, { useEffect, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import "./products.styles.scss";
@@ -17,11 +18,34 @@ const buildQueryString = (obj) => {
   return qs ? `?${qs}` : "";
 };
 
-const fetchProducts = async ({ search, category, sort, page, limit }) => {
-  const qs = buildQueryString({ search, category, sort, page, limit });
+const fetchProducts = async ({
+  search,
+  store,
+  category,
+  sort,
+  page,
+  limit,
+}) => {
+  const qs = buildQueryString({ search, store, category, sort, page, limit });
   const res = await fetch(`${API_URL}/api/products${qs}`);
   if (!res.ok) throw new Error("Failed to fetch products");
-  return res.json(); // { items, pagination }
+  return res.json();
+};
+
+// expects: { stores: [{ value:"asos", label:"ASOS" }, ...] }
+const fetchStores = async ({ category }) => {
+  const qs = buildQueryString({ category });
+  const res = await fetch(`${API_URL}/api/products/stores${qs}`);
+  if (!res.ok) throw new Error("Failed to fetch stores");
+  return res.json();
+};
+
+// expects: { categories: ["jeans","tops", ...] }
+const fetchCategories = async ({ store }) => {
+  const qs = buildQueryString({ store });
+  const res = await fetch(`${API_URL}/api/products/categories${qs}`);
+  if (!res.ok) throw new Error("Failed to fetch categories");
+  return res.json();
 };
 
 const formatMoney = (currency, value) => {
@@ -36,21 +60,82 @@ export default function ProductsPage() {
 
   const params = useMemo(
     () => new URLSearchParams(location.search),
-    [location.search]
+    [location.search],
   );
 
   const searchParam = params.get("search") || "";
+  const storeParam = params.get("store") || "";
   const categoryParam = params.get("category") || "";
   const sortParam = params.get("sort") || "newest";
   const pageParam = Number(params.get("page") || 1);
   const limitParam = Number(params.get("limit") || 24);
 
-  const [searchInput, setSearchInput] = useState(searchParam);
+  const setParamAndGo = (next = {}) => {
+    const nextParams = new URLSearchParams(location.search);
+
+    Object.entries(next).forEach(([k, v]) => {
+      if (v === undefined || v === null || String(v).trim() === "")
+        nextParams.delete(k);
+      else nextParams.set(k, String(v));
+    });
+
+    const qs = nextParams.toString();
+    navigate(qs ? `/products?${qs}` : "/products");
+  };
+
+  const onClear = () => navigate("/products");
+  const goToPage = (p) => setParamAndGo({ page: p });
+
+  // stores depend on category (NOT search)
+  const {
+    data: storesData,
+    isLoading: storesLoading,
+    isError: storesError,
+  } = useQuery({
+    queryKey: ["stores", categoryParam],
+    queryFn: () => fetchStores({ category: categoryParam }),
+    staleTime: 60_000,
+  });
+
+  const stores = storesData?.stores || [];
+
+  // categories depend on store (NOT search)
+  const {
+    data: categoriesData,
+    isLoading: categoriesLoading,
+    isError: categoriesError,
+  } = useQuery({
+    queryKey: ["categories", storeParam],
+    queryFn: () => fetchCategories({ store: storeParam }),
+    staleTime: 60_000,
+  });
+
+  const categories = categoriesData?.categories || [];
+
+  // auto-clear invalid store/category params (prevents “looks broken” states)
+  useEffect(() => {
+    if (!storesLoading && !storesError && storeParam) {
+      const ok = stores.some((s) => s.value === storeParam);
+      if (!ok) setParamAndGo({ store: "", page: 1 });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [storesLoading, storesError, storeParam, stores]);
+
+  useEffect(() => {
+    if (!categoriesLoading && !categoriesError && categoryParam) {
+      const ok = categories.includes(
+        String(categoryParam).toLowerCase().trim(),
+      );
+      if (!ok) setParamAndGo({ category: "", page: 1 });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [categoriesLoading, categoriesError, categoryParam, categories]);
 
   const { data, isLoading, isError, error, isFetching } = useQuery({
     queryKey: [
       "products",
       searchParam,
+      storeParam,
       categoryParam,
       sortParam,
       pageParam,
@@ -59,6 +144,7 @@ export default function ProductsPage() {
     queryFn: () =>
       fetchProducts({
         search: searchParam,
+        store: storeParam,
         category: categoryParam,
         sort: sortParam,
         page: pageParam,
@@ -74,35 +160,6 @@ export default function ProductsPage() {
     pages: 1,
     limit: limitParam,
   };
-
-  const setParamAndGo = (next = {}) => {
-    const nextParams = new URLSearchParams(location.search);
-    Object.entries(next).forEach(([k, v]) => {
-      if (v === undefined || v === null || String(v).trim() === "")
-        nextParams.delete(k);
-      else nextParams.set(k, String(v));
-    });
-    navigate(`/products?${nextParams.toString()}`);
-  };
-
-  const onSearch = (e) => {
-    e.preventDefault();
-    setParamAndGo({ search: searchInput.trim(), page: 1 });
-  };
-
-  const onClear = () => {
-    setSearchInput("");
-    navigate("/products");
-  };
-
-  const goToPage = (p) => setParamAndGo({ page: p });
-
-  const title = useMemo(() => {
-    if (categoryParam)
-      return `${categoryParam[0].toUpperCase()}${categoryParam.slice(1)} Deals`;
-    if (searchParam) return `Results for “${searchParam}”`;
-    return "Latest Deals";
-  }, [categoryParam, searchParam]);
 
   if (isError) {
     return (
@@ -123,103 +180,67 @@ export default function ProductsPage() {
   return (
     <div className="pp-products">
       <div className="pp-container">
-        <div className="pp-hero">
-          <div>
-            <h1 className="pp-title">{title}</h1>
-            <p className="pp-subtitle">
-              Showing <b>{items.length}</b> of <b>{pagination.total}</b>
-              {isFetching ? (
-                <span className="pp-dotlive"> • updating…</span>
-              ) : null}
-            </p>
-            <p className="pp-api">
-              API: <span className="pp-api-url">{API_URL}</span>
-            </p>
-          </div>
-
-          <form className="pp-searchbar" onSubmit={onSearch}>
-            <input
-              className="pp-searchbar-input"
-              value={searchInput}
-              onChange={(e) => setSearchInput(e.target.value)}
-              placeholder="Search products, stores, categories…"
-            />
-            <button className="pp-searchbar-btn" type="submit">
-              Search
-            </button>
-            <button
-              className="pp-searchbar-clear"
-              type="button"
-              onClick={onClear}
-            >
-              Clear
-            </button>
-          </form>
-        </div>
-
         <div className="pp-toolbar">
-          <div className="pp-filters">
-            <button
-              type="button"
-              className={`pp-chip ${!categoryParam ? "is-active" : ""}`}
-              onClick={() => setParamAndGo({ category: "", page: 1 })}
-            >
-              All
-            </button>
-            <button
-              type="button"
-              className={`pp-chip ${categoryParam === "women" ? "is-active" : ""}`}
-              onClick={() => setParamAndGo({ category: "women", page: 1 })}
-            >
-              Women
-            </button>
-            <button
-              type="button"
-              className={`pp-chip ${categoryParam === "men" ? "is-active" : ""}`}
-              onClick={() => setParamAndGo({ category: "men", page: 1 })}
-            >
-              Men
-            </button>
-            <button
-              type="button"
-              className={`pp-chip ${categoryParam === "kids" ? "is-active" : ""}`}
-              onClick={() => setParamAndGo({ category: "kids", page: 1 })}
-            >
-              Kids
-            </button>
-            <button
-              type="button"
-              className={`pp-chip ${categoryParam === "home" ? "is-active" : ""}`}
-              onClick={() => setParamAndGo({ category: "home", page: 1 })}
-            >
-              Home
-            </button>
-            <button
-              type="button"
-              className={`pp-chip ${
-                categoryParam === "electronics" ? "is-active" : ""
-              }`}
-              onClick={() =>
-                setParamAndGo({ category: "electronics", page: 1 })
-              }
-            >
-              Electronics
-            </button>
+          <div className="pp-toolbar-left" aria-label="Filter by category">
+            <div className="pp-chip-row">
+              <button
+                type="button"
+                className={`pp-chip ${!categoryParam ? "is-active" : ""}`}
+                onClick={() => setParamAndGo({ category: "", page: 1 })}
+              >
+                All
+              </button>
+
+              {!categoriesLoading && !categoriesError
+                ? categories.map((c) => (
+                    <button
+                      key={c}
+                      type="button"
+                      className={`pp-chip ${
+                        categoryParam.toLowerCase() === c ? "is-active" : ""
+                      }`}
+                      onClick={() => setParamAndGo({ category: c, page: 1 })}
+                      title={c}
+                    >
+                      {c}
+                    </button>
+                  ))
+                : null}
+            </div>
           </div>
 
-          <div className="pp-sort">
-            <span className="pp-sort-label">Sort</span>
+          <div className="pp-toolbar-right">
+            <select
+              className="pp-sort-select"
+              value={storeParam}
+              onChange={(e) =>
+                setParamAndGo({ store: e.target.value, page: 1 })
+              }
+              title="Filter by store"
+            >
+              <option value="">All stores</option>
+              {!storesLoading && !storesError
+                ? stores.map((s) => (
+                    <option key={s.value} value={s.value}>
+                      {s.label}
+                    </option>
+                  ))
+                : null}
+            </select>
 
             <select
               className="pp-sort-select"
               value={sortParam}
               onChange={(e) => setParamAndGo({ sort: e.target.value, page: 1 })}
+              title="Sort"
             >
               <option value="newest">Newest</option>
               <option value="oldest">Oldest</option>
               <option value="price-asc">Price (Low)</option>
               <option value="price-desc">Price (High)</option>
               <option value="discount-desc">Discount (High)</option>
+              <option value="store-asc">Store (A–Z)</option>
+              <option value="store-desc">Store (Z–A)</option>
             </select>
 
             <select
@@ -300,7 +321,9 @@ export default function ProductsPage() {
 
                       <div className="pp-card-foot">
                         <span
-                          className={`pp-stock ${p.inStock ? "is-in" : "is-out"}`}
+                          className={`pp-stock ${
+                            p.inStock ? "is-in" : "is-out"
+                          }`}
                         >
                           {p.inStock ? "In stock" : "Out of stock"}
                         </span>
@@ -324,6 +347,9 @@ export default function ProductsPage() {
 
                 <div className="pp-pager-mid">
                   Page <b>{pagination.page}</b> of <b>{pagination.pages}</b>
+                  {isFetching ? (
+                    <span className="pp-dotlive"> • updating…</span>
+                  ) : null}
                 </div>
 
                 <button

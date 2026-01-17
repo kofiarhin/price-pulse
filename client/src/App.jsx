@@ -1,4 +1,4 @@
-// App.jsx
+// client/src/App.jsx
 import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import Header from "./components/Header.jsx";
@@ -6,7 +6,7 @@ import ProductsPage from "./pages/ProductsPage/ProductsPage.jsx";
 import ProductDetailsPage from "./pages/ProductDetailsPage/ProductDetailsPage.jsx";
 import Footer from "./components/Footer/Footer.jsx";
 
-export default function App() {
+const App = () => {
   return (
     <>
       <Header />
@@ -18,4 +18,6 @@ export default function App() {
       <Footer />
     </>
   );
-}
+};
+
+export default App;

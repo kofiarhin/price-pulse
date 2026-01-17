@@ -1,3 +1,4 @@
+// server/server.js
 const express = require("express");
 const dotenv = require("dotenv").config();
 const cors = require("cors");
@@ -9,12 +10,34 @@ const connectDB = require("./config/db");
 const app = express();
 const port = process.env.PORT || 5000;
 
-// connect to database
 connectDB();
 
-// middlewares
 app.use(cors());
 app.use(express.json());
+
+const escapeRegex = (s = "") =>
+  String(s).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+const makeExactRegex = (s = "") => new RegExp(`^${escapeRegex(s)}$`, "i");
+const makeContainsRegex = (s = "") => new RegExp(escapeRegex(s), "i");
+
+const buildSearchOr = (qRaw) => {
+  const q = String(qRaw || "").trim();
+  if (!q) return null;
+
+  const re = makeContainsRegex(q);
+
+  return {
+    $or: [
+      { title: re },
+      { storeName: re },
+      { store: re },
+      { category: re },
+      { gender: re },
+      { colors: { $in: [re] } },
+    ],
+  };
+};
 
 // health (liveness)
 app.get("/", (req, res) => {
@@ -36,6 +59,82 @@ app.get("/health", (req, res) => {
   });
 });
 
+// GET /api/products/stores?category=
+app.get("/api/products/stores", async (req, res) => {
+  try {
+    const { category } = req.query;
+
+    const and = [];
+
+    // optional category filter (contains, case-insensitive)
+    if (category) {
+      const c = String(category).trim();
+      if (c) and.push({ category: makeContainsRegex(c) });
+    }
+
+    const match = and.length ? { $and: and } : {};
+
+    const rows = await Product.aggregate([
+      { $match: match },
+      {
+        $project: {
+          value: { $ifNull: ["$store", ""] },
+          label: { $trim: { input: { $ifNull: ["$storeName", "$store"] } } },
+        },
+      },
+      { $match: { value: { $ne: "" }, label: { $ne: "" } } },
+      { $group: { _id: "$value", label: { $first: "$label" } } },
+      { $sort: { label: 1 } },
+    ]);
+
+    res.json({
+      stores: rows.map((r) => ({ value: r._id, label: r.label })),
+    });
+  } catch (error) {
+    res.status(400).json({ message: "something went wrong" });
+  }
+});
+
+// GET /api/products/categories?store=
+app.get("/api/products/categories", async (req, res) => {
+  try {
+    const { store } = req.query;
+
+    const and = [];
+
+    // optional store filter (exact, case-insensitive)
+    if (store) {
+      const s = String(store).trim();
+      if (s) {
+        const sRe = makeExactRegex(s);
+        and.push({ $or: [{ store: sRe }, { storeName: sRe }] });
+      }
+    }
+
+    const match = and.length ? { $and: and } : {};
+
+    const rows = await Product.aggregate([
+      { $match: match },
+      {
+        $project: {
+          categoryLabel: {
+            $toLower: {
+              $trim: { input: { $ifNull: ["$category", ""] } },
+            },
+          },
+        },
+      },
+      { $match: { categoryLabel: { $ne: "" } } },
+      { $group: { _id: "$categoryLabel" } },
+      { $sort: { _id: 1 } },
+    ]);
+
+    res.json({ categories: rows.map((r) => r._id) });
+  } catch (error) {
+    res.status(400).json({ message: "something went wrong" });
+  }
+});
+
 // GET /api/products?search=&store=&category=&gender=&minPrice=&maxPrice=&inStock=&status=&page=&limit=&sort=
 app.get("/api/products", async (req, res) => {
   try {
@@ -50,36 +149,43 @@ app.get("/api/products", async (req, res) => {
       status,
       page = 1,
       limit = 50,
-      sort = "newest", // newest | oldest | price-asc | price-desc | discount-desc
+      sort = "newest", // newest | oldest | price-asc | price-desc | discount-desc | store-asc | store-desc
     } = req.query;
 
-    const query = {};
+    const and = [];
 
-    if (status) query.status = status;
-    if (store) query.store = store;
-    if (category) query.category = category;
-    if (gender) query.gender = gender;
+    if (status) and.push({ status });
+    if (gender) and.push({ gender });
 
-    if (inStock === "true") query.inStock = true;
-    if (inStock === "false") query.inStock = false;
+    if (inStock === "true") and.push({ inStock: true });
+    if (inStock === "false") and.push({ inStock: false });
 
     if (minPrice || maxPrice) {
-      query.price = {};
-      if (minPrice) query.price.$gte = Number(minPrice);
-      if (maxPrice) query.price.$lte = Number(maxPrice);
+      const price = {};
+      if (minPrice) price.$gte = Number(minPrice);
+      if (maxPrice) price.$lte = Number(maxPrice);
+      and.push({ price });
     }
 
-    if (search) {
-      const q = String(search).trim();
-      query.$or = [
-        { title: { $regex: q, $options: "i" } },
-        { storeName: { $regex: q, $options: "i" } },
-        { store: { $regex: q, $options: "i" } },
-        { category: { $regex: q, $options: "i" } },
-        { gender: { $regex: q, $options: "i" } },
-        { colors: { $in: [new RegExp(q, "i")] } },
-      ];
+    // store filter (exact, case-insensitive)
+    if (store) {
+      const s = String(store).trim();
+      if (s) {
+        const sRe = makeExactRegex(s);
+        and.push({ $or: [{ store: sRe }, { storeName: sRe }] });
+      }
     }
+
+    // category filter (contains, case-insensitive)
+    if (category) {
+      const c = String(category).trim();
+      if (c) and.push({ category: makeContainsRegex(c) });
+    }
+
+    const searchOr = buildSearchOr(search);
+    if (searchOr) and.push(searchOr);
+
+    const query = and.length ? { $and: and } : {};
 
     const pageNum = Math.max(1, Number(page) || 1);
     const limitNum = Math.min(200, Math.max(1, Number(limit) || 50));
@@ -91,6 +197,10 @@ app.get("/api/products", async (req, res) => {
     if (sort === "price-desc") sortObj = { price: -1 };
     if (sort === "discount-desc")
       sortObj = { discountPercent: -1, createdAt: -1 };
+    if (sort === "store-asc")
+      sortObj = { storeName: 1, store: 1, createdAt: -1 };
+    if (sort === "store-desc")
+      sortObj = { storeName: -1, store: -1, createdAt: -1 };
 
     const [items, total] = await Promise.all([
       Product.find(query).sort(sortObj).skip(skip).limit(limitNum),
