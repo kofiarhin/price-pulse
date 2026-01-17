@@ -1,18 +1,18 @@
 /* client/src/pages/ProductsPage/products.styles.scss */
+:root {
+  --pp-header-h: 68px;
+}
 
 .pp-products {
   width: 100%;
-  padding-top: 14px;
+  padding-top: 10px;
 }
 
 .pp-toolbar {
   position: sticky;
-  top: 78px;
+  top: var(--pp-header-h);
   z-index: 10;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  padding: 10px 0;
+  padding: 10px 0 12px;
   margin-bottom: 14px;
   backdrop-filter: blur(10px);
   background: linear-gradient(
@@ -23,60 +23,68 @@
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-.pp-toolbar-left {
-  width: 100%;
-}
-
-.pp-chip-row {
+.pp-catbar {
   display: flex;
   gap: 10px;
   overflow-x: auto;
-  padding-bottom: 4px;
+  padding-bottom: 8px;
   -webkit-overflow-scrolling: touch;
 }
 
-.pp-chip-row::-webkit-scrollbar {
+.pp-catbar::-webkit-scrollbar {
   height: 6px;
 }
 
-.pp-chip-row::-webkit-scrollbar-thumb {
+.pp-catbar::-webkit-scrollbar-thumb {
   background: rgba(255, 255, 255, 0.14);
   border-radius: 999px;
 }
 
-.pp-chip {
+.pp-catbtn {
   flex: 0 0 auto;
-  height: 36px;
+  height: 38px;
   padding: 0 12px;
-  border-radius: 999px;
+  border-radius: 6px;
   border: 1px solid rgba(255, 255, 255, 0.14);
-  background: rgba(255, 255, 255, 0.03);
-  color: rgba(255, 255, 255, 0.88);
+  background: rgba(255, 255, 255, 0.02);
+  color: rgba(255, 255, 255, 0.92);
   font-weight: 800;
   cursor: pointer;
   white-space: nowrap;
-  text-transform: lowercase;
 }
 
-.pp-chip.is-active {
-  border-color: rgba(243, 213, 91, 0.9);
-  background: rgba(243, 213, 91, 0.08);
-  color: rgba(243, 213, 91, 0.95);
+.pp-catbtn.is-active {
+  border-color: rgba(243, 213, 91, 0.95);
+  background: rgba(243, 213, 91, 0.1);
+  color: rgba(243, 213, 91, 0.98);
 }
 
-.pp-toolbar-right {
-  display: flex;
-  align-items: center;
+.pp-controls {
+  display: grid;
+  grid-template-columns: 1fr 1fr 0.6fr;
   gap: 10px;
-  justify-content: flex-start;
-  flex-wrap: wrap;
+  align-items: end;
 }
 
-.pp-sort-select {
-  height: 36px;
-  border-radius: 12px;
+.pp-control {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.pp-control-label {
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.75;
+}
+
+.pp-control-select {
+  height: 38px;
+  border-radius: 6px;
   border: 1px solid rgba(255, 255, 255, 0.14);
-  background: rgba(255, 255, 255, 0.03);
+  background: rgba(255, 255, 255, 0.02);
   color: rgba(255, 255, 255, 0.92);
   padding: 0 10px;
   outline: none;
@@ -146,9 +154,9 @@
 }
 
 .pp-card-store {
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 900;
-  opacity: 0.95;
+  opacity: 0.98;
 }
 
 .pp-card-sep {
@@ -158,9 +166,8 @@
 
 .pp-card-cat {
   font-size: 12px;
-  font-weight: 700;
-  opacity: 0.7;
-  text-transform: lowercase;
+  font-weight: 800;
+  opacity: 0.72;
 }
 
 .pp-card-title {
@@ -259,7 +266,7 @@
 .pp-btn {
   height: 44px;
   padding: 0 14px;
-  border-radius: 12px;
+  border-radius: 10px;
   border: 1px solid rgba(243, 213, 91, 0.95);
   background: rgba(243, 213, 91, 0.95);
   color: #121212;
@@ -325,8 +332,12 @@
   margin-bottom: 12px;
 }
 
-/* Responsive (mobile-first) */
+/* Responsive */
 @media (min-width: 520px) {
+  :root {
+    --pp-header-h: 72px;
+  }
+
   .pp-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -341,14 +352,9 @@
 }
 
 @media (min-width: 820px) {
-  .pp-toolbar {
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-  }
-
-  .pp-toolbar-right {
-    justify-content: flex-end;
+  .pp-controls {
+    grid-template-columns: 220px 220px 120px;
+    justify-content: end;
   }
 
   .pp-grid {

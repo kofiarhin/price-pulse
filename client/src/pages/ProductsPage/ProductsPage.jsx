@@ -32,7 +32,6 @@ const fetchProducts = async ({
   return res.json();
 };
 
-// expects: { stores: [{ value:"asos", label:"ASOS" }, ...] }
 const fetchStores = async ({ category }) => {
   const qs = buildQueryString({ category });
   const res = await fetch(`${API_URL}/api/products/stores${qs}`);
@@ -40,7 +39,6 @@ const fetchStores = async ({ category }) => {
   return res.json();
 };
 
-// expects: { categories: ["jeans","tops", ...] }
 const fetchCategories = async ({ store }) => {
   const qs = buildQueryString({ store });
   const res = await fetch(`${API_URL}/api/products/categories${qs}`);
@@ -54,7 +52,15 @@ const formatMoney = (currency, value) => {
   return `${currency} ${n.toFixed(2)}`;
 };
 
-export default function ProductsPage() {
+const toTitle = (s = "") =>
+  String(s)
+    .trim()
+    .split(/[\s/_-]+/g)
+    .filter(Boolean)
+    .map((w) => w.slice(0, 1).toUpperCase() + w.slice(1))
+    .join(" ");
+
+const ProductsPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -86,7 +92,6 @@ export default function ProductsPage() {
   const onClear = () => navigate("/products");
   const goToPage = (p) => setParamAndGo({ page: p });
 
-  // stores depend on category (NOT search)
   const {
     data: storesData,
     isLoading: storesLoading,
@@ -99,7 +104,6 @@ export default function ProductsPage() {
 
   const stores = storesData?.stores || [];
 
-  // categories depend on store (NOT search)
   const {
     data: categoriesData,
     isLoading: categoriesLoading,
@@ -112,7 +116,6 @@ export default function ProductsPage() {
 
   const categories = categoriesData?.categories || [];
 
-  // auto-clear invalid store/category params (prevents “looks broken” states)
   useEffect(() => {
     if (!storesLoading && !storesError && storeParam) {
       const ok = stores.some((s) => s.value === storeParam);
@@ -123,9 +126,8 @@ export default function ProductsPage() {
 
   useEffect(() => {
     if (!categoriesLoading && !categoriesError && categoryParam) {
-      const ok = categories.includes(
-        String(categoryParam).toLowerCase().trim(),
-      );
+      const want = String(categoryParam).toLowerCase().trim();
+      const ok = categories.includes(want);
       if (!ok) setParamAndGo({ category: "", page: 1 });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -181,80 +183,88 @@ export default function ProductsPage() {
     <div className="pp-products">
       <div className="pp-container">
         <div className="pp-toolbar">
-          <div className="pp-toolbar-left" aria-label="Filter by category">
-            <div className="pp-chip-row">
-              <button
-                type="button"
-                className={`pp-chip ${!categoryParam ? "is-active" : ""}`}
-                onClick={() => setParamAndGo({ category: "", page: 1 })}
-              >
-                All
-              </button>
+          <div className="pp-catbar" aria-label="Categories">
+            <button
+              type="button"
+              className={`pp-catbtn ${!categoryParam ? "is-active" : ""}`}
+              onClick={() => setParamAndGo({ category: "", page: 1 })}
+            >
+              All
+            </button>
 
-              {!categoriesLoading && !categoriesError
-                ? categories.map((c) => (
-                    <button
-                      key={c}
-                      type="button"
-                      className={`pp-chip ${
-                        categoryParam.toLowerCase() === c ? "is-active" : ""
-                      }`}
-                      onClick={() => setParamAndGo({ category: c, page: 1 })}
-                      title={c}
-                    >
-                      {c}
-                    </button>
-                  ))
-                : null}
-            </div>
+            {!categoriesLoading && !categoriesError
+              ? categories.map((c) => (
+                  <button
+                    key={c}
+                    type="button"
+                    className={`pp-catbtn ${
+                      String(categoryParam).toLowerCase().trim() === c
+                        ? "is-active"
+                        : ""
+                    }`}
+                    onClick={() => setParamAndGo({ category: c, page: 1 })}
+                    title={toTitle(c)}
+                  >
+                    {toTitle(c)}
+                  </button>
+                ))
+              : null}
           </div>
 
-          <div className="pp-toolbar-right">
-            <select
-              className="pp-sort-select"
-              value={storeParam}
-              onChange={(e) =>
-                setParamAndGo({ store: e.target.value, page: 1 })
-              }
-              title="Filter by store"
-            >
-              <option value="">All stores</option>
-              {!storesLoading && !storesError
-                ? stores.map((s) => (
-                    <option key={s.value} value={s.value}>
-                      {s.label}
-                    </option>
-                  ))
-                : null}
-            </select>
+          <div className="pp-controls" aria-label="Controls">
+            <div className="pp-control">
+              <div className="pp-control-label">Store</div>
+              <select
+                className="pp-control-select"
+                value={storeParam}
+                onChange={(e) =>
+                  setParamAndGo({ store: e.target.value, page: 1 })
+                }
+              >
+                <option value="">All stores</option>
+                {!storesLoading && !storesError
+                  ? stores.map((s) => (
+                      <option key={s.value} value={s.value}>
+                        {s.label}
+                      </option>
+                    ))
+                  : null}
+              </select>
+            </div>
 
-            <select
-              className="pp-sort-select"
-              value={sortParam}
-              onChange={(e) => setParamAndGo({ sort: e.target.value, page: 1 })}
-              title="Sort"
-            >
-              <option value="newest">Newest</option>
-              <option value="oldest">Oldest</option>
-              <option value="price-asc">Price (Low)</option>
-              <option value="price-desc">Price (High)</option>
-              <option value="discount-desc">Discount (High)</option>
-              <option value="store-asc">Store (A–Z)</option>
-              <option value="store-desc">Store (Z–A)</option>
-            </select>
+            <div className="pp-control">
+              <div className="pp-control-label">Sort</div>
+              <select
+                className="pp-control-select"
+                value={sortParam}
+                onChange={(e) =>
+                  setParamAndGo({ sort: e.target.value, page: 1 })
+                }
+              >
+                <option value="newest">Newest</option>
+                <option value="oldest">Oldest</option>
+                <option value="price-asc">Price (Low)</option>
+                <option value="price-desc">Price (High)</option>
+                <option value="discount-desc">Discount (High)</option>
+                <option value="store-asc">Store (A–Z)</option>
+                <option value="store-desc">Store (Z–A)</option>
+              </select>
+            </div>
 
-            <select
-              className="pp-sort-select"
-              value={String(limitParam)}
-              onChange={(e) =>
-                setParamAndGo({ limit: e.target.value, page: 1 })
-              }
-              title="Items per page"
-            >
-              <option value="24">24</option>
-              <option value="36">36</option>
-              <option value="48">48</option>
-            </select>
+            <div className="pp-control">
+              <div className="pp-control-label">Show</div>
+              <select
+                className="pp-control-select"
+                value={String(limitParam)}
+                onChange={(e) =>
+                  setParamAndGo({ limit: e.target.value, page: 1 })
+                }
+              >
+                <option value="24">24</option>
+                <option value="36">36</option>
+                <option value="48">48</option>
+              </select>
+            </div>
           </div>
         </div>
 
@@ -300,7 +310,7 @@ export default function ProductsPage() {
                         </span>
                         <span className="pp-card-sep">•</span>
                         <span className="pp-card-cat">
-                          {p.category || "uncategorized"}
+                          {toTitle(p.category || "uncategorized")}
                         </span>
                       </div>
 
@@ -368,4 +378,6 @@ export default function ProductsPage() {
       </div>
     </div>
   );
-}
+};
+
+export default ProductsPage;

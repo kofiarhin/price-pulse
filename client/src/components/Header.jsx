@@ -5,8 +5,8 @@ import "./header.styles.scss";
 
 const Icon = ({ name }) => {
   const common = {
-    width: 20,
-    height: 20,
+    width: 18,
+    height: 18,
     viewBox: "0 0 24 24",
     fill: "none",
     xmlns: "http://www.w3.org/2000/svg",
@@ -100,37 +100,31 @@ const Header = () => {
 
   return (
     <header className="pp-header">
-      <div className="pp-top-row">
-        <div className="pp-container pp-top-inner">
-          <NavLink to="/products" className="pp-logo">
-            PricePulse
-          </NavLink>
+      <div className="pp-container pp-header-inner">
+        <NavLink to="/products" className="pp-logo">
+          PricePulse
+        </NavLink>
 
-          <form className="pp-search" onSubmit={onSubmit}>
-            <input
-              className="pp-search-input"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search products, stores, categories..."
-              aria-label="Search products"
-            />
-            <button className="pp-search-btn" type="submit" aria-label="Search">
-              <Icon name="search" />
-            </button>
-          </form>
+        <form className="pp-search" onSubmit={onSubmit}>
+          <input
+            className="pp-search-input"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Search for items and brands"
+            aria-label="Search products"
+          />
+          <button className="pp-search-icon" type="submit" aria-label="Search">
+            <Icon name="search" />
+          </button>
+        </form>
 
-          <div className="pp-actions">
-            <button
-              type="button"
-              className="pp-icon-btn"
-              aria-label="Watchlist"
-            >
-              <Icon name="heart" />
-            </button>
-            <button type="button" className="pp-icon-btn" aria-label="Account">
-              <Icon name="user" />
-            </button>
-          </div>
+        <div className="pp-actions">
+          <button type="button" className="pp-icon-btn" aria-label="Watchlist">
+            <Icon name="heart" />
+          </button>
+          <button type="button" className="pp-icon-btn" aria-label="Account">
+            <Icon name="user" />
+          </button>
         </div>
       </div>
     </header>
