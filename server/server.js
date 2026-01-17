@@ -1,6 +1,7 @@
 const express = require("express");
-dotenv = require("dotenv").config();
+const dotenv = require("dotenv").config();
 const cors = require("cors");
+const mongoose = require("mongoose");
 
 const Product = require("./models/product.model");
 const connectDB = require("./config/db");
@@ -15,9 +16,24 @@ connectDB();
 app.use(cors());
 app.use(express.json());
 
-// health
+// health (liveness)
 app.get("/", (req, res) => {
   res.json({ ok: true, service: "api", time: new Date().toISOString() });
+});
+
+// health (readiness + db)
+app.get("/health", (req, res) => {
+  const states = ["disconnected", "connected", "connecting", "disconnecting"];
+  const dbState = states[mongoose.connection.readyState] || "unknown";
+  const ok = dbState === "connected";
+
+  res.status(ok ? 200 : 503).json({
+    ok,
+    service: "api",
+    db: dbState,
+    uptime: Math.floor(process.uptime()),
+    time: new Date().toISOString(),
+  });
 });
 
 // GET /api/products?search=&store=&category=&gender=&minPrice=&maxPrice=&inStock=&status=&page=&limit=&sort=

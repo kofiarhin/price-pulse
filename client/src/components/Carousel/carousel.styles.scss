@@ -1,0 +1,81 @@
+.carousel {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  .carousel-viewport {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 3 / 4;
+    background-color: #f6f6f6;
+    overflow: hidden;
+  }
+
+  .image-container {
+    width: 100%;
+    height: 100%;
+  }
+
+  .carousel-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .nav-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255, 255, 255, 0.9);
+    border: none;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    font-size: 1.2rem;
+    z-index: 2;
+  }
+
+  .prev {
+    left: 0;
+  }
+  .next {
+    right: 0;
+  }
+
+  .indicator-track {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    border: none;
+    background: #ccc;
+    cursor: pointer;
+    padding: 0;
+  }
+
+  .active {
+    background: #000;
+    width: 20px;
+    border-radius: 4px;
+  }
+}
+
+// Tablet/Desktop Breakpoint
+@media (min-width: 768px) {
+  .carousel {
+    .nav-btn {
+      opacity: 0;
+      transition: opacity 0.2s ease;
+    }
+
+    .carousel-viewport:hover .nav-btn {
+      opacity: 1;
+    }
+  }
+}
