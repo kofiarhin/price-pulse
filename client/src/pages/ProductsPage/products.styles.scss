@@ -84,10 +84,11 @@ $text-muted: #888;
   cursor: pointer;
   transition: 0.2s;
 
+  // ✅ Active styling now matches gender segmented control (white bg, black text)
   &.is-active {
-    border-color: $accent-yellow;
-    color: $accent-yellow;
-    background: rgba(243, 213, 91, 0.05);
+    background: #fff;
+    color: #000;
+    border-color: #fff;
   }
 }
 
