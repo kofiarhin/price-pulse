@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import "./home-page.styles.scss";
 
 const HomePage = () => {
@@ -52,10 +52,20 @@ const HomePage = () => {
             <button
               className="home-page-icon-btn"
               onClick={() => navigate("/products")}
+              aria-label="Browse products"
+              title="Browse products"
+            >
+              <span className="material-symbols-outlined">storefront</span>
+            </button>
+
+            <button
+              className="home-page-icon-btn"
+              onClick={() => navigate("/products")}
               aria-label="Favorites"
             >
               <span className="material-symbols-outlined">favorite</span>
             </button>
+
             <button
               className="home-page-icon-btn"
               onClick={() => navigate("/products")}
@@ -88,6 +98,14 @@ const HomePage = () => {
                 <span className="material-symbols-outlined">search</span>
               </button>
             </form>
+          </div>
+
+          {/* ✅ Browse Products link */}
+          <div className="home-page-cta-row">
+            <Link to="/products" className="home-page-browse-link">
+              Browse Products
+              <span className="material-symbols-outlined">arrow_forward</span>
+            </Link>
           </div>
         </section>
 
