@@ -1,5 +1,5 @@
 /* client/src/pages/HomePage/HomePage.jsx */
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import "./home-page.styles.scss";
 
@@ -7,20 +7,35 @@ const HomePage = () => {
   const navigate = useNavigate();
   const [search, setSearch] = useState("");
 
-  const tiles = [
+  const tiles = useMemo(() => [
     {
-      id: "flash",
+      key: "flash-sales",
       title: "Flash Sales",
-      sub: "Live markdowns from top UK retailers updated in real-time.",
+      sub: "Live markdowns from ASOS, Zara, and top retailers updated hourly.",
       icon: "bolt",
-      to: "/products?sort=discount-desc"
-    }
-  ];
+      to: "/products?sort=discount-desc&inStock=true",
+    },
+    {
+      key: "deep-drops",
+      title: "Deep Drops",
+      sub: "Items with the most significant price adjustments across the UK.",
+      icon: "trending_down",
+      to: "/products?sort=discount-desc",
+    },
+    {
+      key: "value-finds",
+      title: "Value Finds",
+      sub: "High-quality fashion picks curated for under £20.",
+      icon: "payments",
+      to: "/products?maxPrice=20&sort=price-asc",
+    },
+  ], []);
 
   const onSearch = (e) => {
     e.preventDefault();
-    if (!search.trim()) return;
-    navigate(`/products?q=${encodeURIComponent(search.trim())}`);
+    const q = search.trim();
+    if (!q) return;
+    navigate(`/products?search=${encodeURIComponent(q)}&status=active`);
   };
 
   return (
@@ -30,9 +45,15 @@ const HomePage = () => {
           <button className="home-page-brand" onClick={() => navigate("/")}>
             BANGINGPRICES / ARCHIVE
           </button>
-          <button className="home-page-icon-btn" onClick={() => navigate("/products")}>
-            <span className="material-symbols-outlined">grid_view</span>
-          </button>
+
+          <div className="home-page-nav-actions">
+            <button className="home-page-icon-btn" onClick={() => navigate("/products")}>
+              <span className="material-symbols-outlined">grid_view</span>
+            </button>
+            <button className="home-page-icon-btn" onClick={() => navigate("/products")}>
+              <span className="material-symbols-outlined">person</span>
+            </button>
+          </div>
         </header>
 
         <section className="home-page-hero">
@@ -67,15 +88,24 @@ const HomePage = () => {
           </div>
         </section>
 
-        <section className="home-page-tiles">
+        <span className="home-page-label">Curated Discovery</span>
+
+        <section className="home-page-tiles" aria-label="Quick actions">
           {tiles.map((t) => (
-            <div key={t.id} className="home-page-tile" onClick={() => navigate(t.to)}>
+            <button
+              key={t.key}
+              className="home-page-tile"
+              type="button"
+              onClick={() => navigate(t.to)}
+            >
               <span className="material-symbols-outlined home-page-tile-icon">
                 {t.icon}
               </span>
-              <h3 className="home-page-tile-title">{t.title}</h3>
-              <p className="home-page-tile-sub">{t.sub}</p>
-            </div>
+              <div className="home-page-tile-info">
+                <div className="home-page-tile-title">{t.title}</div>
+                <div className="home-page-tile-sub">{t.sub}</div>
+              </div>
+            </button>
           ))}
         </section>
       </div>
