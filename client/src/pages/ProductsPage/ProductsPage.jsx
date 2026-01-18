@@ -66,7 +66,7 @@ const ProductsPage = () => {
           <div className="pp-toolbar-inner">
             {/* Segmented Control */}
             <div className="pp-genderbar">
-              {["", "men", "women", "unisex"].map((g) => (
+              {["", "men", "women", "kids"].map((g) => (
                 <button
                   key={g}
                   className={`pp-genderbtn ${gender === g ? "is-active" : ""}`}
