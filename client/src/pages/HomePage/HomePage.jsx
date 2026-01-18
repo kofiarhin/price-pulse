@@ -45,7 +45,7 @@ const HomePage = () => {
       <div className="home-page-container">
         <header className="home-page-header">
           <button className="home-page-brand" onClick={() => navigate("/")}>
-            PRICEPULSE
+            BANGINGPRICES
           </button>
 
           <div className="home-page-nav-actions">
