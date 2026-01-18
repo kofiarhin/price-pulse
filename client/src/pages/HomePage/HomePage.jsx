@@ -1,4 +1,3 @@
-// client/src/pages/HomePage/HomePage.jsx
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./home-page.styles.scss";
@@ -11,51 +10,30 @@ const HomePage = () => {
     () => [
       {
         key: "daily-deals",
-        title: "Daily Deals",
-        sub: "Fresh picks with big % off today",
-        icon: "sell",
-        to: "/products?sort=discount-desc&inStock=true&status=active",
+        title: "Flash Sales",
+        sub: "Live markdowns from ASOS, Zara, and top retailers updated hourly.",
+        icon: "bolt",
+        to: "/products?sort=discount-desc&inStock=true",
       },
       {
         key: "biggest-discounts",
-        title: "Biggest Discounts",
-        sub: "Top markdowns across all stores",
-        icon: "percent",
-        to: "/products?sort=discount-desc&status=active",
+        title: "Deep Drops",
+        sub: "Items with the most significant price adjustments across the UK.",
+        icon: "trending_down",
+        to: "/products?sort=discount-desc",
       },
       {
         key: "under-20",
-        title: "Under £20",
-        sub: "Best value finds under £20",
-        icon: "savings",
-        to: "/products?maxPrice=20&sort=price-asc&status=active",
-      },
-      {
-        key: "price-drops",
-        title: "Price Drops",
-        sub: "Items that just got cheaper",
-        icon: "trending_down",
-        to: "/products?sort=discount-desc&status=active",
-      },
-      {
-        key: "stores",
-        title: "Stores",
-        sub: "Browse deals by retailer",
-        icon: "storefront",
-        to: "/products?sort=store-asc&status=active",
-      },
-      {
-        key: "saved-alerts",
-        title: "Saved Alerts",
-        sub: "Track items and get drop alerts",
-        icon: "notifications_active",
-        to: "/products?status=active",
+        title: "Value Finds",
+        sub: "High-quality fashion picks curated for under £20.",
+        icon: "payments",
+        to: "/products?maxPrice=20&sort=price-asc",
       },
     ],
     [],
   );
 
-  const onSubmit = (e) => {
+  const onSearch = (e) => {
     e.preventDefault();
     const q = search.trim();
     if (!q) return;
@@ -66,47 +44,22 @@ const HomePage = () => {
     <main className="home-page">
       <div className="home-page-container">
         <header className="home-page-header">
-          <button
-            type="button"
-            className="home-page-brand"
-            onClick={() => navigate("/")}
-            aria-label="Go to home"
-          >
+          <button className="home-page-brand" onClick={() => navigate("/")}>
             PRICEPULSE
           </button>
 
-          <form className="home-page-search" onSubmit={onSubmit}>
-            <input
-              className="home-page-search-input"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search for items and brands"
-              aria-label="Search for items and brands"
-            />
-            <button
-              className="home-page-search-btn"
-              type="submit"
-              aria-label="Search"
-            >
-              <span className="material-symbols-outlined">search</span>
-            </button>
-          </form>
-
-          <div className="home-page-actions">
+          <div className="home-page-nav-actions">
             <button
               className="home-page-icon-btn"
-              type="button"
-              aria-label="Saved"
-              onClick={() => navigate("/products?status=active")}
+              onClick={() => navigate("/products")}
+              aria-label="Favorites"
             >
               <span className="material-symbols-outlined">favorite</span>
             </button>
-
             <button
               className="home-page-icon-btn"
-              type="button"
-              aria-label="Account"
-              onClick={() => navigate("/products?status=active")}
+              onClick={() => navigate("/products")}
+              aria-label="Profile"
             >
               <span className="material-symbols-outlined">person</span>
             </button>
@@ -114,13 +67,31 @@ const HomePage = () => {
         </header>
 
         <section className="home-page-hero">
+          <span className="home-page-badge">Real-time Tracker</span>
           <h1 className="home-page-title">
-            Track deals across UK fashion stores
+            Smart Fashion <br /> Intelligence.
           </h1>
           <p className="home-page-sub">
-            Search deals, save alerts, and get notified when prices change.
+            We track thousands of products across major UK retailers to find
+            hidden price drops. Never pay full price again.
           </p>
+
+          <div className="home-page-search-wrap">
+            <form className="home-page-search" onSubmit={onSearch}>
+              <input
+                className="home-page-search-input"
+                placeholder="Search brands or items..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+              />
+              <button className="home-page-search-btn" type="submit">
+                <span className="material-symbols-outlined">search</span>
+              </button>
+            </form>
+          </div>
         </section>
+
+        <span className="home-page-label">Curated Discovery</span>
 
         <section className="home-page-tiles" aria-label="Quick actions">
           {tiles.map((t) => (
@@ -129,13 +100,11 @@ const HomePage = () => {
               className="home-page-tile"
               type="button"
               onClick={() => navigate(t.to)}
-              aria-label={t.title}
             >
               <div className="home-page-tile-icon">
                 <span className="material-symbols-outlined">{t.icon}</span>
               </div>
-
-              <div className="home-page-tile-text">
+              <div className="home-page-tile-info">
                 <div className="home-page-tile-title">{t.title}</div>
                 <div className="home-page-tile-sub">{t.sub}</div>
               </div>
