@@ -6,10 +6,9 @@ const Product = require("../models/product.model");
 const PriceHistory = require("../models/pricehistory.model");
 
 // Scraper Imports
-// const { runZaraCrawl } = require("../scrappers/zara.scraper"); // ✅ MVP: removed
-const { runPltCrawl } = require("../scrappers/plt.scraper");
 const { runAsosCrawl } = require("../scrappers/asos.scraper");
 const { runBoohooCrawl } = require("../scrappers/boohoo.scraper");
+const { runPltCrawl } = require("../scrappers/plt.scraper");
 
 // --- UTILITIES ---
 
@@ -142,7 +141,7 @@ const writePriceHistoryAndDetectDrops = async ({
   const keys = products.map((p) => p.canonicalKey);
   const prevProducts = await Product.find(
     { canonicalKey: { $in: keys } },
-    { canonicalKey: 1, price: 1 }
+    { canonicalKey: 1, price: 1 },
   ).lean();
   const prevMap = new Map(prevProducts.map((p) => [p.canonicalKey, p.price]));
 
@@ -188,7 +187,7 @@ const runStore = async ({ storeKey, crawlFn, startUrls }) => {
   const seenKeys = products.map((p) => p.canonicalKey);
   const inactive = await Product.updateMany(
     { store: storeKey, status: "active", canonicalKey: { $nin: seenKeys } },
-    { $set: { status: "inactive", inStock: false } }
+    { $set: { status: "inactive", inStock: false } },
   );
 
   return {
@@ -205,16 +204,7 @@ const run = async () => {
 
   console.log("🚀 Starting Sequential Crawl Process...");
 
-  // 1. ✅ PrettyLittleThing
-  summaries.push(
-    await runStore({
-      storeKey: "prettylittlething",
-      crawlFn: runPltCrawl,
-      startUrls: ["https://www.prettylittlething.com/sale.html"],
-    })
-  );
-
-  // 2. ✅ ASOS
+  // 1) ✅ ASOS
   summaries.push(
     await runStore({
       storeKey: "asos",
@@ -223,25 +213,32 @@ const run = async () => {
         "https://www.asos.com/women/sale/cat/?cid=7046",
         "https://www.asos.com/men/sale/cat/?cid=8409",
       ],
-    })
+    }),
   );
 
-  // 3. ✅ Boohoo
+  // 2) ✅ Boohoo
   summaries.push(
     await runStore({
       storeKey: "boohooman",
       crawlFn: runBoohooCrawl,
       startUrls: ["https://www.boohooman.com/mens/sale"],
-    })
+    }),
+  );
+
+  // 3) ✅ PrettyLittleThing
+  summaries.push(
+    await runStore({
+      storeKey: "prettylittlething",
+      crawlFn: runPltCrawl,
+      startUrls: ["https://www.prettylittlething.com/sale.html"],
+    }),
   );
 
   console.log("\n=== STORE RUN SUMMARY ✅ ===");
   summaries.forEach((s) =>
     console.log(
-      `${s.store.toUpperCase()}: Total ${s.total} | New ${
-        s.inserted
-      } | Updated ${s.updated} | Drops ${s.drops}`
-    )
+      `${s.store.toUpperCase()}: Total ${s.total} | New ${s.inserted} | Updated ${s.updated} | Drops ${s.drops}`,
+    ),
   );
 
   await mongoose.connection.close();
