@@ -3,7 +3,6 @@ import { useEffect, useMemo, useState } from "react";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import "./header.styles.scss";
 
-// High-fidelity SVG set
 const HeaderIcon = ({ name }) => {
   const icons = {
     search: <path d="M21 21l-4.35-4.35M19 11a8 8 0 11-16 0 8 8 0 0116 0z" />,
@@ -48,12 +47,10 @@ const Header = () => {
   return (
     <header className="phd-header">
       <div className="phd-header-container">
-        {/* Brand with subtle glitch hover */}
         <NavLink to="/" className="phd-logo">
-          Banging<span>Prices</span>
+          BangingPrices
         </NavLink>
 
-        {/* Command-Bar Style Search */}
         <form className="phd-search-wrapper" onSubmit={handleSearch}>
           <div className="phd-search-bar">
             <div className="phd-search-icon-prefix">
@@ -63,21 +60,19 @@ const Header = () => {
               className="phd-input"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Initialize asset search..."
+              placeholder="Search items or brands..."
               aria-label="Search"
             />
             <div className="phd-search-kbd">⌘K</div>
           </div>
         </form>
 
-        {/* Interactive Action Hub */}
         <div className="phd-actions">
-          <button className="phd-action-btn" onClick={() => navigate("/watchlist")}>
+          <button className="phd-action-btn" onClick={() => navigate("/products")}>
             <HeaderIcon name="heart" />
-            <span className="phd-badge">0</span>
           </button>
           
-          <button className="phd-profile-trigger">
+          <button className="phd-profile-trigger" onClick={() => navigate("/products")}>
             <div className="phd-avatar">
               <HeaderIcon name="user" />
             </div>
