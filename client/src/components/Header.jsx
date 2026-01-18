@@ -1,129 +1,86 @@
-// client/src/components/Header.jsx
-import React, { useEffect, useMemo, useState } from "react";
+/* client/src/components/Header.jsx */
+import { useEffect, useMemo, useState } from "react";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import "./header.styles.scss";
 
-const Icon = ({ name }) => {
-  const common = {
-    width: 18,
-    height: 18,
-    viewBox: "0 0 24 24",
-    fill: "none",
-    xmlns: "http://www.w3.org/2000/svg",
+// High-fidelity SVG set
+const HeaderIcon = ({ name }) => {
+  const icons = {
+    search: <path d="M21 21l-4.35-4.35M19 11a8 8 0 11-16 0 8 8 0 0116 0z" />,
+    user: <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2M12 11a4 4 0 100-8 4 4 0 000 8z" />,
+    heart: <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l8.84-8.84 1.06-1.06a5.5 5.5 0 000-7.78z" />,
+    terminal: <path d="M4 17l6-6-6-6M12 19h8" />
   };
 
-  if (name === "search")
-    return (
-      <svg {...common}>
-        <path
-          d="M10.5 18a7.5 7.5 0 1 1 0-15 7.5 7.5 0 0 1 0 15Z"
-          stroke="currentColor"
-          strokeWidth="2"
-        />
-        <path
-          d="M16.5 16.5 21 21"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-        />
-      </svg>
-    );
-
-  if (name === "user")
-    return (
-      <svg {...common}>
-        <path
-          d="M12 12a4 4 0 1 0-4-4 4 4 0 0 0 4 4Z"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-        />
-        <path
-          d="M4 21a8 8 0 0 1 16 0"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-        />
-      </svg>
-    );
-
-  if (name === "heart")
-    return (
-      <svg {...common}>
-        <path
-          d="M12 21s-7-4.35-9.33-8.4C.61 9.1 2.33 6 6 6c1.77 0 3.1.8 4 2 0.9-1.2 2.23-2 4-2 3.67 0 5.39 3.1 3.33 6.6C19 16.65 12 21 12 21Z"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinejoin="round"
-        />
-      </svg>
-    );
-
-  return null;
+  return (
+    <svg 
+      width="20" height="20" viewBox="0 0 24 24" 
+      fill="none" stroke="currentColor" strokeWidth="2" 
+      strokeLinecap="round" strokeLinejoin="round"
+    >
+      {icons[name]}
+    </svg>
+  );
 };
 
 const Header = () => {
   const navigate = useNavigate();
   const location = useLocation();
-
-  const params = useMemo(
-    () => new URLSearchParams(location.search),
-    [location.search],
-  );
-
+  const params = useMemo(() => new URLSearchParams(location.search), [location.search]);
   const [search, setSearch] = useState(params.get("search") || "");
 
   useEffect(() => {
-    const p = new URLSearchParams(location.search);
-    setSearch(p.get("search") || "");
+    setSearch(new URLSearchParams(location.search).get("search") || "");
   }, [location.search]);
 
-  const setParamAndGo = (next = {}) => {
-    const nextParams = new URLSearchParams(location.search);
-
-    Object.entries(next).forEach(([k, v]) => {
-      if (v === undefined || v === null || String(v).trim() === "")
-        nextParams.delete(k);
-      else nextParams.set(k, String(v));
-    });
-
-    nextParams.set("page", "1");
-
-    const qs = nextParams.toString();
-    navigate(qs ? `/products?${qs}` : "/products");
-  };
-
-  const onSubmit = (e) => {
+  const handleSearch = (e) => {
     e.preventDefault();
-    setParamAndGo({ search: search.trim() });
+    const nextParams = new URLSearchParams(location.search);
+    const q = search.trim();
+    
+    if (q) nextParams.set("search", q);
+    else nextParams.delete("search");
+    
+    nextParams.set("page", "1");
+    navigate(`/products?${nextParams.toString()}`);
   };
 
   return (
-    <header className="pp-header">
-      <div className="pp-container pp-header-inner">
-        <NavLink to="/" className="pp-logo">
-          BangingPrices
+    <header className="phd-header">
+      <div className="phd-header-container">
+        {/* Brand with subtle glitch hover */}
+        <NavLink to="/" className="phd-logo">
+          Banging<span>Prices</span>
         </NavLink>
 
-        <form className="pp-search" onSubmit={onSubmit}>
-          <input
-            className="pp-search-input"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="Search for items and brands"
-            aria-label="Search products"
-          />
-          <button className="pp-search-icon" type="submit" aria-label="Search">
-            <Icon name="search" />
-          </button>
+        {/* Command-Bar Style Search */}
+        <form className="phd-search-wrapper" onSubmit={handleSearch}>
+          <div className="phd-search-bar">
+            <div className="phd-search-icon-prefix">
+              <HeaderIcon name="terminal" />
+            </div>
+            <input
+              className="phd-input"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Initialize asset search..."
+              aria-label="Search"
+            />
+            <div className="phd-search-kbd">⌘K</div>
+          </div>
         </form>
 
-        <div className="pp-actions">
-          <button type="button" className="pp-icon-btn" aria-label="Watchlist">
-            <Icon name="heart" />
+        {/* Interactive Action Hub */}
+        <div className="phd-actions">
+          <button className="phd-action-btn" onClick={() => navigate("/watchlist")}>
+            <HeaderIcon name="heart" />
+            <span className="phd-badge">0</span>
           </button>
-          <button type="button" className="pp-icon-btn" aria-label="Account">
-            <Icon name="user" />
+          
+          <button className="phd-profile-trigger">
+            <div className="phd-avatar">
+              <HeaderIcon name="user" />
+            </div>
           </button>
         </div>
       </div>
