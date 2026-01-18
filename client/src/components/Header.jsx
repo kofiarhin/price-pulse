@@ -102,7 +102,7 @@ const Header = () => {
     <header className="pp-header">
       <div className="pp-container pp-header-inner">
         <NavLink to="/" className="pp-logo">
-          PricePulse
+          BangingPrices
         </NavLink>
 
         <form className="pp-search" onSubmit={onSubmit}>
