@@ -1,102 +1,143 @@
-/* client/src/components/header.styles.scss */
-.pp-header {
-  position: sticky;
-  top: 0;
-  z-index: 50;
-  background: #0f0f0f;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+/* footer.styles.scss */
+
+// Variables
+$nero: #050505;
+$glass-border: rgba(255, 255, 255, 0.08);
+$text-muted: #666;
+$accent-green: #00ff88;
+
+.pp-footer {
+  background: $nero;
+  border-top: 1px solid $glass-border;
+  padding: 60px 20px 40px;
+  color: #fff;
 }
 
-.pp-container {
-  width: 100%;
+.pp-footer-container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 14px;
 }
 
-.pp-header-inner {
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  gap: 12px;
-  align-items: center;
-  padding: 12px 0;
+// Brand Section
+.pp-footer-brand {
+  margin-bottom: 48px;
 }
 
-.pp-logo {
-  color: #ffffff;
-  text-decoration: none;
+.pp-footer-logo {
+  font-size: 24px;
   font-weight: 900;
-  font-size: 22px;
-  letter-spacing: 2px;
+  letter-spacing: -0.04em;
+  margin-bottom: 12px;
+}
+
+.pp-footer-tagline {
+  color: $text-muted;
+  font-size: 14px;
+  max-width: 240px;
+  line-height: 1.5;
+}
+
+// Link Columns
+.pp-footer-cols {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); // 2 columns on mobile
+  gap: 40px 20px;
+  margin-bottom: 60px;
+}
+
+.pp-footer-title {
+  font-size: 11px;
+  font-weight: 900;
   text-transform: uppercase;
-  line-height: 1;
-  white-space: nowrap;
+  letter-spacing: 1.5px;
+  color: #fff;
+  margin-bottom: 20px;
 }
 
-.pp-search {
-  position: relative;
+.pp-footer-link {
+  display: block;
+  color: $text-muted;
+  text-decoration: none;
+  font-size: 14px;
+  margin-bottom: 12px;
+  transition: color 0.2s;
+
+  &:hover {
+    color: #fff;
+  }
+}
+
+// Bottom Bar
+.pp-footer-bottom {
+  padding-top: 32px;
+  border-top: 1px solid $glass-border;
+}
+
+.pp-footer-mini {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.pp-footer-pill {
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  padding: 6px 12px;
+  border: 1px solid $glass-border;
+  border-radius: 100px;
+  color: $text-muted;
   display: flex;
   align-items: center;
-  width: 100%;
+  gap: 6px;
+
+  &::before {
+    content: "";
+    width: 4px;
+    height: 4px;
+    background: $accent-green;
+    border-radius: 50%;
+  }
 }
 
-.pp-search-input {
-  width: 100%;
-  height: 44px;
-  border-radius: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  background: rgba(255, 255, 255, 0.03);
-  color: rgba(255, 255, 255, 0.92);
-  padding: 0 44px 0 12px;
-  outline: none;
+.pp-footer-copy {
+  font-size: 12px;
+  color: $text-muted;
+  letter-spacing: 0.2px;
 }
 
-.pp-search-input::placeholder {
-  color: rgba(255, 255, 255, 0.55);
-}
+// Desktop: Sophisticated 4-column layout
+@media (min-width: 1024px) {
+  .pp-footer {
+    padding: 100px 40px 60px;
+  }
 
-.pp-search-icon {
-  position: absolute;
-  right: 8px;
-  top: 50%;
-  transform: translateY(-50%);
-  height: 34px;
-  width: 34px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border: 0;
-  border-radius: 8px;
-  cursor: pointer;
-  background: rgba(255, 255, 255, 0.06);
-  color: rgba(255, 255, 255, 0.9);
-}
+  .pp-footer-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
 
-.pp-actions {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
+  .pp-footer-brand {
+    margin-bottom: 0;
+  }
 
-.pp-icon-btn {
-  height: 40px;
-  width: 40px;
-  border-radius: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  background: rgba(255, 255, 255, 0.03);
-  color: rgba(255, 255, 255, 0.92);
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
+  .pp-footer-cols {
+    grid-template-columns: repeat(3, 160px); // Clean alignment
+    gap: 0 40px;
+    margin-bottom: 0;
+  }
 
-.pp-icon-btn:active {
-  transform: scale(0.98);
-}
+  .pp-footer-bottom {
+    margin-top: 100px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: row-reverse;
+  }
 
-@media (min-width: 900px) {
-  .pp-logo {
-    font-size: 26px;
+  .pp-footer-mini {
+    margin-bottom: 0;
   }
 }
