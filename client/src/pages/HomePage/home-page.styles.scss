@@ -1,36 +1,27 @@
 /* client/src/pages/HomePage/home-page.styles.scss */
 
 $accent-yellow: #f3d55b;
-$nero: #050607; // Deeper black for more contrast
+$accent-blue: #007aff; // Match the icon button in your screenshot
+$nero: #050607;
 $glass: rgba(255, 255, 255, 0.03);
-$glass-border: rgba(255, 255, 255, 0.07);
+$glass-border: rgba(255, 255, 255, 0.1);
 
-// Animations
 @keyframes pageReveal {
-  from { opacity: 0; filter: blur(10px); }
+  from { opacity: 0; filter: blur(8px); }
   to { opacity: 1; filter: blur(0); }
 }
 
 @keyframes textSlideUp {
-  from { opacity: 0; transform: translateY(30px); }
+  from { opacity: 0; transform: translateY(20px); }
   to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes borderGlow {
-  0%, 100% { border-color: $glass-border; }
-  50% { border-color: rgba($accent-yellow, 0.3); }
 }
 
 .home-page {
   min-height: 100vh;
-  background: 
-    radial-gradient(circle at 50% -20%, #1a1c1e 0%, $nero 80%),
-    linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
-  background-size: 100% 100%, 40px 40px, 40px 40px;
+  background: radial-gradient(circle at 50% -20%, #1a1c1e 0%, $nero 100%);
   color: #fff;
   padding-bottom: 80px;
-  animation: pageReveal 1s ease-out;
+  animation: pageReveal 0.8s ease-out;
 }
 
 .home-page-container {
@@ -38,143 +29,180 @@ $glass-border: rgba(255, 255, 255, 0.07);
   margin: 0 auto;
 }
 
-/* 10/10 Header Re-design */
+/* Header */
 .home-page-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   height: 100px;
-  border-bottom: 1px solid $glass-border;
 }
 
 .home-page-brand {
-  font-weight: 950;
+  font-weight: 900;
   font-size: 14px;
-  letter-spacing: 4px;
-  background: linear-gradient(90deg, #fff, #888);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  cursor: pointer;
+  letter-spacing: 3px;
+  color: #fff;
   text-transform: uppercase;
+  background: none;
+  border: none;
+  cursor: pointer;
 }
 
-/* Hero Section: Impactful Typography */
+/* Hero */
 .home-page-hero {
-  padding: 100px 0 60px;
-  
+  padding: 80px 0 40px;
+
   .home-page-badge {
+    display: inline-block;
     padding: 6px 12px;
     background: rgba($accent-yellow, 0.1);
     border: 1px solid rgba($accent-yellow, 0.2);
-    border-radius: 4px;
-    animation: textSlideUp 0.6s ease-out;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 800;
+    color: $accent-yellow;
+    margin-bottom: 24px;
+    animation: textSlideUp 0.5s ease-out;
   }
 
   .home-page-title {
-    font-size: clamp(44px, 10vw, 84px);
+    font-size: clamp(48px, 10vw, 80px);
     font-weight: 900;
     line-height: 0.95;
-    letter-spacing: -0.05em;
-    margin: 20px 0;
-    animation: textSlideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.1s backwards;
+    letter-spacing: -0.04em;
+    margin: 0 0 24px;
+    animation: textSlideUp 0.6s ease-out 0.1s backwards;
 
-    span {
-      color: $accent-yellow;
-      position: relative;
-      &::after {
-        content: '';
-        position: absolute;
-        bottom: 10px; left: 0;
-        width: 100%; height: 4px;
-        background: $accent-yellow;
-        opacity: 0.2;
-      }
-    }
+    span { color: $accent-yellow; }
   }
 
   .home-page-sub {
-    font-size: 19px;
-    color: #a0a0a0;
-    max-width: 45ch;
-    animation: textSlideUp 0.8s ease-out 0.2s backwards;
+    font-size: 18px;
+    color: #888;
+    max-width: 40ch;
+    line-height: 1.5;
+    animation: textSlideUp 0.6s ease-out 0.2s backwards;
   }
 }
 
-/* Search: Neo-minimalist */
+/* 🚀 FIXED SEARCH STYLING */
 .home-page-search-wrap {
-  margin-top: 54px;
-  max-width: 600px;
-  animation: textSlideUp 0.8s ease-out 0.3s backwards;
+  margin-top: 48px;
+  max-width: 500px;
+  animation: textSlideUp 0.6s ease-out 0.3s backwards;
 }
 
 .home-page-search {
-  background: rgba(255,255,255,0.02);
-  backdrop-filter: blur(10px);
-  border: 1px solid $glass-border;
-  padding: 10px 10px 10px 30px;
-  border-radius: 16px; // Squared-off for a more modern look
   display: flex;
-  transition: all 0.4s ease;
+  align-items: center;
+  background: #111; // Solid dark base
+  border: 1px solid $glass-border;
+  padding: 6px; // Space for the button
+  border-radius: 12px;
+  transition: all 0.3s ease;
 
   &:focus-within {
-    background: rgba(255,255,255,0.05);
     border-color: $accent-yellow;
-    box-shadow: 0 0 30px rgba($accent-yellow, 0.1);
+    background: #161616;
   }
 }
 
-/* Tiles: The 10/10 Logic */
+.home-page-search-input {
+  flex: 1;
+  background: transparent; // Fixed the white background issue
+  border: none;
+  outline: none;
+  color: #fff;
+  font-size: 16px;
+  padding: 0 16px;
+  height: 44px;
+
+  &::placeholder {
+    color: #555;
+  }
+}
+
+.home-page-search-btn {
+  width: 44px;
+  height: 44px;
+  background: $accent-blue;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+
+  &:hover {
+    transform: scale(1.05);
+    background: lighten($accent-blue, 5%);
+  }
+}
+
+/* CTA */
+.home-page-cta-row {
+  margin-top: 32px;
+  animation: textSlideUp 0.6s ease-out 0.4s backwards;
+}
+
+.home-page-browse-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #fff;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 15px;
+  
+  .material-symbols-outlined {
+    font-size: 18px;
+    transition: transform 0.3s ease;
+  }
+
+  &:hover .material-symbols-outlined {
+    transform: translateX(4px);
+  }
+}
+
+/* Tiles */
 .home-page-tiles {
+  margin-top: 80px;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 24px;
-  margin-top: 40px;
+  gap: 20px;
 }
 
 .home-page-tile {
-  background: $glass;
+  background: rgba(255,255,255, 0.02);
   border: 1px solid $glass-border;
   padding: 40px;
-  border-radius: 2px; // Sharp, professional edge
-  transition: all 0.5s cubic-bezier(0.2, 1, 0.2, 1);
-  position: relative;
-  
-  @for $i from 1 through 3 {
-    &:nth-child(#{$i}) { animation: textSlideUp 0.8s ease-out #{0.4 + ($i * 0.1)}s backwards; }
-  }
+  border-radius: 16px;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 
   &:hover {
-    background: rgba(255,255,255,0.05);
-    transform: translateY(-10px);
-    border-color: rgba($accent-yellow, 0.5);
-    
-    .home-page-tile-icon {
-      color: #fff;
-      transform: scale(1.2);
-    }
+    background: rgba(255,255,255, 0.05);
+    transform: translateY(-8px);
+    border-color: rgba($accent-yellow, 0.4);
   }
 }
 
 .home-page-tile-icon {
-  font-size: 32px;
   color: $accent-yellow;
-  margin-bottom: 24px;
-  transition: transform 0.4s ease;
+  font-size: 32px;
+  margin-bottom: 20px;
 }
 
 .home-page-tile-title {
   font-size: 22px;
   font-weight: 800;
-  margin-bottom: 12px;
+  margin-bottom: 8px;
 }
 
 .home-page-tile-sub {
-  color: #777;
+  color: #666;
   font-size: 15px;
-  line-height: 1.6;
-}
-
-@media (max-width: 768px) {
-  .home-page-header { height: 80px; }
-  .home-page-hero { padding: 60px 0; }
+  line-height: 1.5;
 }
