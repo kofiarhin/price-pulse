@@ -119,6 +119,7 @@ $glass-border: rgba(255, 255, 255, 0.08);
   color: #fff;
   font-size: 16px;
   font-weight: 500;
+
   &::placeholder {
     color: #444;
   }
@@ -138,6 +139,41 @@ $glass-border: rgba(255, 255, 255, 0.08);
 
   &:hover {
     transform: scale(1.05);
+  }
+}
+
+/* ✅ Browse Products CTA */
+.home-page-cta-row {
+  margin-top: 18px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.home-page-browse-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  border-radius: 999px;
+  border: 1px solid $glass-border;
+  background: $glass;
+  color: #fff;
+  text-decoration: none;
+  font-weight: 900;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.2);
+    transform: translateY(-1px);
+  }
+
+  .material-symbols-outlined {
+    font-size: 18px;
   }
 }
 
