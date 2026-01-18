@@ -9,33 +9,33 @@ const HomePage = () => {
 
   const tiles = useMemo(() => [
     {
-      key: "flash-sales",
-      title: "Flash Sales",
-      sub: "Live markdowns from ASOS, Zara, and top retailers updated hourly.",
+      key: "matrix-flash",
+      title: "Real-time Flash",
+      sub: "Neural tracking of price fluctuations across 50+ UK retailers.",
       icon: "bolt",
-      to: "/products?sort=discount-desc&inStock=true",
+      to: "/products?sort=discount-desc&status=live",
     },
     {
-      key: "deep-drops",
-      title: "Deep Drops",
-      sub: "Items with the most significant price adjustments across the UK.",
-      icon: "trending_down",
+      key: "matrix-drops",
+      title: "Price Volatility",
+      sub: "Identify the most significant valuation drops in the last 24h.",
+      icon: "query_stats",
       to: "/products?sort=discount-desc",
     },
     {
-      key: "value-finds",
-      title: "Value Finds",
-      sub: "High-quality fashion picks curated for under £20.",
-      icon: "payments",
-      to: "/products?maxPrice=20&sort=price-asc",
+      key: "matrix-curated",
+      title: "Value Intelligence",
+      sub: "Premium asset curation restricted to sub-£20 price points.",
+      icon: "insights",
+      to: "/products?maxPrice=20",
     },
   ], []);
 
-  const onSearch = (e) => {
+  const handleSearch = (e) => {
     e.preventDefault();
-    const q = search.trim();
-    if (!q) return;
-    navigate(`/products?search=${encodeURIComponent(q)}&status=active`);
+    const query = search.trim();
+    if (!query) return;
+    navigate(`/products?q=${encodeURIComponent(query)}`);
   };
 
   return (
@@ -43,69 +43,65 @@ const HomePage = () => {
       <div className="home-page-container">
         <header className="home-page-header">
           <button className="home-page-brand" onClick={() => navigate("/")}>
-            BANGINGPRICES / ARCHIVE
+            BANGINGPRICES // CORE_V2.6
           </button>
 
           <div className="home-page-nav-actions">
-            <button className="home-page-icon-btn" onClick={() => navigate("/products")}>
-              <span className="material-symbols-outlined">grid_view</span>
-            </button>
-            <button className="home-page-icon-btn" onClick={() => navigate("/products")}>
-              <span className="material-symbols-outlined">person</span>
-            </button>
+            {["terminal", "layers", "account_circle"].map((icon) => (
+              <button key={icon} className="home-page-icon-btn" onClick={() => navigate("/products")}>
+                <span className="material-symbols-outlined">{icon}</span>
+              </button>
+            ))}
           </div>
         </header>
 
         <section className="home-page-hero">
-          <span className="home-page-badge">V2.6 Live Engine</span>
+          <div className="home-page-badge">Live Intelligence Engine</div>
           <h1 className="home-page-title">
-            The Future of <br /> <span>Shopping Logic.</span>
+            Arbitrage <br /> <span>Refined.</span>
           </h1>
           <p className="home-page-sub">
-            High-performance price tracking for the UK's biggest fashion retailers. 
-            Data-driven savings, delivered in real-time.
+            The architect's tool for fashion intelligence. We monitor market 
+            inefficiencies to capture real-time price drops.
           </p>
 
           <div className="home-page-search-wrap">
-            <form className="home-page-search" onSubmit={onSearch}>
+            <form className="home-page-search" onSubmit={handleSearch}>
               <input
                 className="home-page-search-input"
-                placeholder="Search brand, category, or trend..."
+                placeholder="Initialize asset search..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
               />
               <button className="home-page-search-btn" type="submit">
-                <span className="material-symbols-outlined">north_east</span>
+                <span className="material-symbols-outlined">api</span>
               </button>
             </form>
           </div>
 
           <div className="home-page-cta-row">
             <Link to="/products" className="home-page-browse-link">
-              Explore Intelligence
-              <span className="material-symbols-outlined">chevron_right</span>
+              ACCESS REPOSITORY
+              <span className="material-symbols-outlined">arrow_right_alt</span>
             </Link>
           </div>
         </section>
 
-        <span className="home-page-label">Curated Discovery</span>
-
-        <section className="home-page-tiles" aria-label="Quick actions">
+        <section className="home-page-tiles" aria-label="System modules">
           {tiles.map((t) => (
-            <button
+            <div
               key={t.key}
               className="home-page-tile"
-              type="button"
               onClick={() => navigate(t.to)}
             >
               <span className="material-symbols-outlined home-page-tile-icon">
                 {t.icon}
               </span>
               <div className="home-page-tile-info">
-                <div className="home-page-tile-title">{t.title}</div>
-                <div className="home-page-tile-sub">{t.sub}</div>
+                <h3 className="home-page-tile-title">{t.title}</h3>
+                <p className="home-page-tile-sub">{t.sub}</p>
               </div>
-            </button>
+            </div>
           ))}
         </section>
       </div>
