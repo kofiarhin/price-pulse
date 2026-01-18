@@ -101,7 +101,7 @@ const Header = () => {
   return (
     <header className="pp-header">
       <div className="pp-container pp-header-inner">
-        <NavLink to="/products" className="pp-logo">
+        <NavLink to="/" className="pp-logo">
           PricePulse
         </NavLink>
 

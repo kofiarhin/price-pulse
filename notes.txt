@@ -46,3 +46,70 @@ e:    https://static.zara.net/assets/public/5277/7f81/c8d54c6388dd/3b1f942956e5/
 │ ImagesCount: 12
 │ Images:   https://static.zara.net/assets/public/8354/de68/f9a3477e954d/f4858a17b5bb/00881319800-p/00881319800-p.jpg?ts=1753261588721&w=270 | https://static.zara.net/assets/public/0892/6621/adc14d35b343/a047d5f0cd2e/00881319800-a1/00881319800-a1.jpg?ts=1753261588914&w=270 | https://static.zara.net/assets/public/ec47/fc53/4f074c61aeec/add6468f58d6/00881319800-a2/00881319800-a2.jpg?ts=1753261588640&w=270 | https://static.zara.net/assets/public/a9d9/a0ea/51c64eb192c5/f5548f733160/00881319800-a3/00881319800-a3.jpg?ts=1753261589126&w=270 | https://static.zara.net/assets/public/9c88/3140/480148619ec0/be8a53c7edd3/00881319800-a4/00881319800-a4.jpg?ts=1753261589030&w=270│ URL:      https://www.zara.com/uk/en/short-gauze-dress-with-lace-p00881319.html
 └─────────────────────────────────────────────────
+
+
+{
+  "_id": {
+    "$oid": "6968348fa71d089512882ab4"
+  },
+  "canonicalKey": "boohooman:84347f1e49859615f0251d548cee7252c2be0f6f",
+  "__v": 0,
+  "category": "tops",
+  "colors": [
+    "khaki"
+  ],
+  "createdAt": {
+    "$date": "2026-01-15T00:28:32.131Z"
+  },
+  "currency": "GBP",
+  "discountPercent": 70,
+  "gender": "men",
+  "image": "https://mediahub.boohooman.com/cmm13070_khaki_xl/mens-khaki-oversized-homme-mesh-hockey-top?qlt=85&w=556&h=0&fit=ctn",
+  "images": [
+    "https://mediahub.boohooman.com/cmm13070_khaki_xl/mens-khaki-oversized-homme-mesh-hockey-top?qlt=85&w=556&h=0&fit=ctn",
+    "https://mediahub.boohooman.com/cmm13070_khaki_xl/khaki-oversized-homme-mesh-hockey-top?qlt=85&w=556&h=0&fit=ctn&fmt=auto",
+    "https://mediahub.boohooman.com/cmm13070_khaki_xl/khaki-oversized-homme-mesh-hockey-top?qlt=85&w=112&h=167&fit=ctn&fmt=webp",
+    "https://mediahub.boohooman.com/cmm13070_khaki_xl_1/khaki-oversized-homme-mesh-hockey-top?qlt=85&w=112&h=167&fit=ctn&fmt=webp",
+    "https://mediahub.boohooman.com/cmm13070_khaki_xl_2/khaki-oversized-homme-mesh-hockey-top?qlt=85&w=112&h=167&fit=ctn&fmt=webp",
+    "https://mediahub.boohooman.com/cmm13070_khaki_xl_s.jpg?qlt=85&w=28&h=28&fit=ctn&fmt=webp",
+    "https://mediahub.boohooman.com/cmm13071_ecru_xl?qlt=85&w=249&h=374&sm=C&fmt=webp",
+    "https://mediahub.boohooman.com/cmm13073_khaki_xl?qlt=85&w=249&h=374&sm=C&fmt=webp",
+    "https://mediahub.boohooman.com/cmm18470_blue_xl?qlt=85&w=249&h=374&sm=C&fmt=webp",
+    "https://mediahub.boohooman.com/cmm13654_ecru_xl?qlt=85&w=249&h=374&sm=C&fmt=webp",
+    "https://mediahub.boohooman.com/cmm19562_grey_xl?qlt=85&w=249&h=374&sm=C&fmt=webp",
+    "https://mediahub.boohooman.com/cmm09836_black_xl?qlt=85&w=249&h=374&sm=C&fmt=webp",
+    "https://mediahub.boohooman.com/cmm19355_black_xl?qlt=85&w=249&h=374&sm=C&fmt=webp",
+    "https://mediahub.boohooman.com/GIFT_CARD_ICON_5481_1"
+  ],
+  "inStock": true,
+  "lastSeenAt": {
+    "$date": "2026-01-15T02:14:32.105Z"
+  },
+  "originalPrice": 20,
+  "price": 6,
+  "productUrl": "https://www.boohooman.com/oversized-homme-mesh-hockey-top/CMM13070.html",
+  "saleUrl": "https://www.boohooman.com/mens/sale",
+  "sizes": [
+    "XS",
+    "M",
+    "L"
+  ],
+  "sizesRaw": [
+    "XS",
+    "M",
+    "L"
+  ],
+  "status": "active",
+  "store": "boohooman",
+  "storeName": "boohooMAN",
+  "title": "Oversized Homme Mesh Hockey Top",
+  "updatedAt": {
+    "$date": "2026-01-15T02:14:32.105Z"
+  }
+}
+
+
+
+Smart Tracking
+For Sharp Dressers
+The elite price engine for UK fashion. Get notified before the stock
