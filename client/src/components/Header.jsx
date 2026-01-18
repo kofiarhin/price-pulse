@@ -25,21 +25,21 @@ const HeaderIcon = ({ name }) => {
 const Header = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false);
+  
   const params = useMemo(() => new URLSearchParams(location.search), [location.search]);
   const [search, setSearch] = useState(params.get("search") || "");
 
   useEffect(() => {
     setSearch(new URLSearchParams(location.search).get("search") || "");
+    setIsMobileSearchOpen(false); // Close mobile bar on navigation
   }, [location.search]);
 
   const handleSearch = (e) => {
     e.preventDefault();
     const nextParams = new URLSearchParams(location.search);
     const q = search.trim();
-    
-    if (q) nextParams.set("search", q);
-    else nextParams.delete("search");
-    
+    q ? nextParams.set("search", q) : nextParams.delete("search");
     nextParams.set("page", "1");
     navigate(`/products?${nextParams.toString()}`);
   };
@@ -47,11 +47,16 @@ const Header = () => {
   return (
     <header className="phd-header">
       <div className="phd-header-container">
+        {/* Logo - Stays visible */}
         <NavLink to="/" className="phd-logo">
           BangingPrices
         </NavLink>
 
-        <form className="phd-search-wrapper" onSubmit={handleSearch}>
+        {/* Desktop Search / Collapsible Mobile Search */}
+        <form 
+          className={`phd-search-wrapper ${isMobileSearchOpen ? 'is-open' : ''}`} 
+          onSubmit={handleSearch}
+        >
           <div className="phd-search-bar">
             <div className="phd-search-icon-prefix">
               <HeaderIcon name="terminal" />
@@ -60,14 +65,31 @@ const Header = () => {
               className="phd-input"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search items or brands..."
+              placeholder="Search assets..."
               aria-label="Search"
             />
+            {isMobileSearchOpen && (
+              <button 
+                type="button" 
+                className="phd-search-close" 
+                onClick={() => setIsMobileSearchOpen(false)}
+              >
+                ✕
+              </button>
+            )}
             <div className="phd-search-kbd">⌘K</div>
           </div>
         </form>
 
         <div className="phd-actions">
+          {/* Mobile Search Trigger */}
+          <button 
+            className="phd-action-btn mobile-only" 
+            onClick={() => setIsMobileSearchOpen(true)}
+          >
+            <HeaderIcon name="search" />
+          </button>
+          
           <button className="phd-action-btn" onClick={() => navigate("/products")}>
             <HeaderIcon name="heart" />
           </button>
