@@ -66,6 +66,7 @@ $text-muted: #888;
   overflow-x: auto;
   padding-bottom: 4px;
   scrollbar-width: none;
+
   &::-webkit-scrollbar {
     display: none;
   }
@@ -117,12 +118,19 @@ $text-muted: #888;
   outline: none;
 }
 
-// The Editorial Grid
+// The Editorial Grid (✅ 2 columns on mobile)
 .pp-grid {
   display: grid;
-  grid-template-columns: 1fr;
-  gap: 32px 16px;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px 12px;
   padding: 30px 0;
+}
+
+// Optional: 1 column on super small devices
+@media (max-width: 360px) {
+  .pp-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 .pp-card {
@@ -199,6 +207,7 @@ $text-muted: #888;
   font-size: 15px;
   font-weight: 900;
 }
+
 .pp-card-was {
   font-size: 12px;
   color: $text-muted;
@@ -224,16 +233,17 @@ $text-muted: #888;
   font-size: 12px;
   text-transform: uppercase;
   cursor: pointer;
+
   &:disabled {
     opacity: 0.3;
     cursor: not-allowed;
   }
 }
 
-// Desktop Queries
+// Breakpoints
 @media (min-width: 600px) {
   .pp-grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(3, 1fr);
   }
 }
 
