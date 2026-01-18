@@ -8,74 +8,70 @@ $glass-border: rgba(255, 255, 255, 0.08);
   position: sticky;
   top: 0;
   z-index: 1000;
-  background: rgba($nero, 0.9);
+  background: rgba($nero, 0.95);
   backdrop-filter: blur(20px);
   border-bottom: 1px solid $glass-border;
-  height: 80px;
+  height: 72px;
   display: flex;
   align-items: center;
-
-  // Subtle accent line under the header
-  &::after {
-    content: '';
-    position: absolute;
-    bottom: -1px;
-    left: 10%;
-    width: 80%;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, rgba($accent-yellow, 0.3), transparent);
-  }
 }
 
 .phd-header-container {
-  width: min(1300px, calc(100% - 40px));
+  width: min(1300px, calc(100% - 32px));
   margin: 0 auto;
-  display: grid;
-  grid-template-columns: auto 1fr auto;
+  display: flex;
+  justify-content: space-between;
   align-items: center;
-  gap: 32px;
+  position: relative;
 }
 
 .phd-logo {
   font-weight: 900;
-  font-size: 22px;
-  letter-spacing: -0.02em; // Tighter, more modern tracking
+  font-size: 20px;
+  letter-spacing: -0.02em;
   color: #fff;
   text-decoration: none;
-  transition: opacity 0.2s ease;
-
-  &:hover {
-    opacity: 0.8;
-  }
+  flex-shrink: 0;
+  z-index: 10;
 }
 
+/* Search Logic */
 .phd-search-wrapper {
-  width: 100%;
-  max-width: 540px;
-  justify-self: center;
+  flex: 1;
+  max-width: 500px;
+  margin: 0 20px;
+  transition: all 0.3s ease;
+
+  @media (max-width: 850px) {
+    display: none; // Hide default search on tablet/mobile
+
+    &.is-open {
+      display: block;
+      position: absolute;
+      top: 50%;
+      left: 0;
+      transform: translateY(-50%);
+      width: 100%;
+      max-width: none;
+      margin: 0;
+      z-index: 20;
+      background: $nero;
+    }
+  }
 }
 
 .phd-search-bar {
   display: flex;
   align-items: center;
-  background: rgba(255, 255, 255, 0.03);
+  background: rgba(255, 255, 255, 0.04);
   border: 1px solid $glass-border;
   border-radius: 12px;
-  padding: 0 14px;
-  height: 48px;
-  transition: all 0.3s ease;
+  padding: 0 12px;
+  height: 44px;
 
   &:focus-within {
     border-color: $accent-yellow;
-    background: rgba(255, 255, 255, 0.06);
   }
-}
-
-.phd-search-icon-prefix {
-  color: #444;
-  margin-right: 12px;
-  display: grid;
-  place-items: center;
 }
 
 .phd-input {
@@ -83,28 +79,37 @@ $glass-border: rgba(255, 255, 255, 0.08);
   background: transparent;
   border: none;
   color: #fff;
-  font-size: 16px; // LOCKED AT 16PX
-  font-weight: 500;
+  font-size: 16px; // 16px to prevent iOS zoom
   outline: none;
+  width: 100%;
+}
 
-  &::placeholder {
-    color: #555;
-  }
+.phd-search-close {
+  background: transparent;
+  border: none;
+  color: #fff;
+  padding: 8px;
+  cursor: pointer;
 }
 
 .phd-search-kbd {
   font-size: 10px;
-  font-weight: 800;
   color: #555;
   background: rgba(255, 255, 255, 0.05);
-  padding: 4px 6px;
+  padding: 2px 4px;
   border-radius: 4px;
+  margin-left: 8px;
+
+  @media (max-width: 1024px) { display: none; }
 }
 
+/* Actions */
 .phd-actions {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 12px;
+  flex-shrink: 0;
+  z-index: 10;
 }
 
 .phd-action-btn {
@@ -112,43 +117,29 @@ $glass-border: rgba(255, 255, 255, 0.08);
   border: none;
   color: #fff;
   cursor: pointer;
-  transition: transform 0.2s ease;
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
 
-  &:hover {
-    transform: scale(1.1);
-    color: $accent-yellow;
-  }
-}
-
-.phd-profile-trigger {
-  background: transparent;
-  border: none;
-  padding: 0;
-  cursor: pointer;
-
-  .phd-avatar {
-    width: 38px;
-    height: 38px;
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid $glass-border;
-    border-radius: 10px;
-    display: grid;
-    place-items: center;
-    color: #fff;
-    transition: all 0.3s ease;
-
-    &:hover {
-      border-color: $accent-yellow;
-      background: rgba($accent-yellow, 0.1);
-    }
-  }
-}
-
-@media (max-width: 768px) {
-  .phd-search-kbd, .phd-search-icon-prefix {
+  &.mobile-only {
     display: none;
+    @media (max-width: 850px) { display: grid; }
   }
-  .phd-logo {
-    font-size: 18px;
-  }
+}
+
+.phd-avatar {
+  width: 36px;
+  height: 36px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid $glass-border;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  color: #fff;
+}
+
+@media (max-width: 480px) {
+  .phd-logo { font-size: 18px; }
+  .phd-header { height: 64px; }
 }
