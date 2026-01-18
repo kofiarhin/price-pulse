@@ -1,8 +1,19 @@
-/* client/src/components/header.styles.scss */
-
 $accent-yellow: #f3d55b;
 $nero: #050607;
 $glass-border: rgba(255, 255, 255, 0.08);
+
+/* ✅ shared layout tokens */
+:root {
+  --pp-container-max: 1300px;
+  --pp-container-pad: 16px; /* left/right gutter */
+  --pp-header-h: 72px;
+}
+
+@media (max-width: 480px) {
+  :root {
+    --pp-header-h: 64px;
+  }
+}
 
 .phd-header {
   position: sticky;
@@ -11,13 +22,16 @@ $glass-border: rgba(255, 255, 255, 0.08);
   background: rgba($nero, 0.95);
   backdrop-filter: blur(20px);
   border-bottom: 1px solid $glass-border;
-  height: 72px;
+  height: var(--pp-header-h);
   display: flex;
   align-items: center;
 }
 
 .phd-header-container {
-  width: min(1300px, calc(100% - 32px));
+  width: min(
+    var(--pp-container-max),
+    calc(100% - (var(--pp-container-pad) * 2))
+  );
   margin: 0 auto;
   display: flex;
   justify-content: space-between;
@@ -43,7 +57,7 @@ $glass-border: rgba(255, 255, 255, 0.08);
   transition: all 0.3s ease;
 
   @media (max-width: 850px) {
-    display: none; // Hide default search on tablet/mobile
+    display: none;
 
     &.is-open {
       display: block;
@@ -79,7 +93,7 @@ $glass-border: rgba(255, 255, 255, 0.08);
   background: transparent;
   border: none;
   color: #fff;
-  font-size: 16px; // 16px to prevent iOS zoom
+  font-size: 16px;
   outline: none;
   width: 100%;
 }
@@ -100,7 +114,9 @@ $glass-border: rgba(255, 255, 255, 0.08);
   border-radius: 4px;
   margin-left: 8px;
 
-  @media (max-width: 1024px) { display: none; }
+  @media (max-width: 1024px) {
+    display: none;
+  }
 }
 
 /* Actions */
@@ -124,7 +140,10 @@ $glass-border: rgba(255, 255, 255, 0.08);
 
   &.mobile-only {
     display: none;
-    @media (max-width: 850px) { display: grid; }
+
+    @media (max-width: 850px) {
+      display: grid;
+    }
   }
 }
 
@@ -140,6 +159,7 @@ $glass-border: rgba(255, 255, 255, 0.08);
 }
 
 @media (max-width: 480px) {
-  .phd-logo { font-size: 18px; }
-  .phd-header { height: 64px; }
+  .phd-logo {
+    font-size: 18px;
+  }
 }

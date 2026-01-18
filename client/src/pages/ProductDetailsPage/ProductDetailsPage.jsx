@@ -1,3 +1,4 @@
+/* client/src/pages/ProductDetailsPage/ProductDetailsPage.jsx */
 import React, { useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
@@ -37,6 +38,7 @@ const fetchSimilar = async (p) => {
     limit: "8",
     sort: "discount-desc",
   });
+
   if (p?.category) params.set("category", p.category);
   if (p?.gender) params.set("gender", p.gender);
 
@@ -50,7 +52,6 @@ const ProductDetailsPage = () => {
   const { id } = useParams();
   const qc = useQueryClient();
 
-  // Queries
   const {
     data: p,
     isLoading,
@@ -68,7 +69,6 @@ const ProductDetailsPage = () => {
     enabled: !!p?._id,
   });
 
-  // State
   const [activeIdx, setActiveIdx] = useState(0);
   const [saved, setSaved] = useState(false);
   const [shareDone, setShareDone] = useState(false);
@@ -85,7 +85,6 @@ const ProductDetailsPage = () => {
 
   const activeImageUrl = gallery[activeIdx] || p?.image;
 
-  // Actions
   const onShare = async () => {
     try {
       await navigator.clipboard.writeText(window.location.href);
@@ -120,153 +119,178 @@ const ProductDetailsPage = () => {
   return (
     <div className="pd-page">
       <nav className="pd-top">
-        <Link className="pd-back" to="/products">
-          <span className="material-symbols-outlined">arrow_back</span>
-          <span>Feed</span>
-        </Link>
-        <div className="pd-top-actions">
-          <button className="pd-icon-btn" onClick={onShare} title="Share deal">
-            <span className="material-symbols-outlined">share</span>
-          </button>
-          <button
-            className={`pd-icon-btn ${saved ? "is-active" : ""}`}
-            onClick={() => setSaved(!saved)}
-          >
-            <span className="material-symbols-outlined">
-              {saved ? "favorite" : "favorite_border"}
-            </span>
-          </button>
+        <div className="pd-container pd-top-inner">
+          <Link className="pd-back" to="/products">
+            <span className="material-symbols-outlined">arrow_back</span>
+            <span>Feed</span>
+          </Link>
+
+          <div className="pd-top-actions">
+            <button
+              className="pd-icon-btn"
+              onClick={onShare}
+              title="Share deal"
+            >
+              <span className="material-symbols-outlined">share</span>
+            </button>
+
+            <button
+              className={`pd-icon-btn ${saved ? "is-active" : ""}`}
+              onClick={() => setSaved(!saved)}
+              title="Save"
+            >
+              <span className="material-symbols-outlined">
+                {saved ? "favorite" : "favorite_border"}
+              </span>
+            </button>
+          </div>
         </div>
       </nav>
 
       {shareDone && <div className="pd-toast">Link copied to clipboard</div>}
 
-      <div className="pd-layout">
-        <section className="pd-media">
-          <div className="pd-thumbs">
-            {gallery.map((url, idx) => (
-              <button
-                key={idx}
-                className={`pd-thumb ${idx === activeIdx ? "is-active" : ""}`}
-                onClick={() => setActiveIdx(idx)}
-              >
-                <img src={url} alt="" loading="lazy" />
-              </button>
-            ))}
-          </div>
-          <div className="pd-main">
-            <img src={activeImageUrl} alt={p.title} />
-          </div>
-          {/* Desktop scroll-snap helper: renders images in sequence if in lookbook mode */}
-          <div className="pd-lookbook-helper">
-            {gallery.slice(1).map((url, i) => (
-              <div key={i} className="pd-main">
-                <img src={url} alt="" />
-              </div>
-            ))}
-          </div>
-        </section>
+      <div className="pd-container">
+        <div className="pd-layout">
+          <section className="pd-media">
+            <div className="pd-thumbs">
+              {gallery.map((url, idx) => (
+                <button
+                  key={idx}
+                  className={`pd-thumb ${idx === activeIdx ? "is-active" : ""}`}
+                  onClick={() => setActiveIdx(idx)}
+                >
+                  <img src={url} alt="" loading="lazy" />
+                </button>
+              ))}
+            </div>
 
-        <aside className="pd-panel">
-          <h1 className="pd-title">{p.title}</h1>
+            <div className="pd-main">
+              <img src={activeImageUrl} alt={p.title} />
+            </div>
 
-          <div className="pd-price-card">
-            <div className="pd-price-row">
-              <div className="pd-price">
-                <span className="pd-price-now">
-                  {formatMoney(p.currency, p.price)}
-                </span>
-                {p.originalPrice && (
-                  <span className="pd-price-was">
-                    {formatMoney(p.currency, p.originalPrice)}
+            <div className="pd-lookbook-helper">
+              {gallery.slice(1).map((url, i) => (
+                <div key={i} className="pd-main">
+                  <img src={url} alt="" />
+                </div>
+              ))}
+            </div>
+          </section>
+
+          <aside className="pd-panel">
+            <h1 className="pd-title">{p.title}</h1>
+
+            <div className="pd-price-card">
+              <div className="pd-price-row">
+                <div className="pd-price">
+                  <span className="pd-price-now">
+                    {formatMoney(p.currency, p.price)}
                   </span>
-                )}
+                  {p.originalPrice && (
+                    <span className="pd-price-was">
+                      {formatMoney(p.currency, p.originalPrice)}
+                    </span>
+                  )}
+                </div>
+
+                {discount > 0 ? (
+                  <span className="pd-discount-tag">-{discount}%</span>
+                ) : null}
               </div>
-              {discount > 0 && (
-                <span className="pd-discount-tag">-{discount}%</span>
-              )}
+
+              <div className="pd-badges">
+                <span
+                  className={`pd-badge ${p.inStock ? "is-good" : "is-bad"}`}
+                >
+                  {p.inStock ? "In Stock" : "Out of Stock"}
+                </span>
+                <span className="pd-badge pd-badge-muted">
+                  Updated {formatTimeAgo(p.lastSeenAt)}
+                </span>
+              </div>
             </div>
 
-            <div className="pd-badges">
-              <span className={`pd-badge ${p.inStock ? "is-good" : "is-bad"}`}>
-                {p.inStock ? "In Stock" : "Out of Stock"}
-              </span>
-              <span className="pd-badge pd-badge-muted">
-                Updated {formatTimeAgo(p.lastSeenAt)}
-              </span>
-            </div>
-          </div>
+            <div className="pd-meta-grid">
+              <div className="pd-meta-item">
+                <span className="pd-meta-label">Retailer</span>
+                <span className="pd-meta-value">{p.storeName || p.store}</span>
+              </div>
 
-          <div className="pd-meta-grid">
-            <div className="pd-meta-item">
-              <span className="pd-meta-label">Retailer</span>
-              <span className="pd-meta-value">{p.storeName || p.store}</span>
-            </div>
-            <div className="pd-meta-item">
-              <span className="pd-meta-label">Category</span>
-              <span className="pd-meta-value">{p.category || "General"}</span>
-            </div>
-            <div className="pd-meta-item">
-              <span className="pd-meta-label">Gender</span>
-              <span className="pd-meta-value">{p.gender || "Unisex"}</span>
-            </div>
-            <div className="pd-meta-item">
-              <span className="pd-meta-label">ID</span>
-              <span className="pd-meta-value">#{p._id.slice(-6)}</span>
-            </div>
-          </div>
+              <div className="pd-meta-item">
+                <span className="pd-meta-label">Category</span>
+                <span className="pd-meta-value">{p.category || "General"}</span>
+              </div>
 
-          <div className="pd-cta">
-            <a
-              className="pd-btn pd-btn-primary"
-              href={p.productUrl}
-              target="_blank"
-              rel="noreferrer"
-            >
-              View on Store
-            </a>
-            <button
-              className="pd-btn pd-btn-secondary"
-              onClick={() => {
-                setAlertOpen(true);
-                setTargetPrice(p.price);
-              }}
-            >
-              Monitor Price
-            </button>
-            <button
-              className="pd-btn pd-btn-ghost"
-              onClick={() => qc.invalidateQueries(["product", id])}
-            >
-              Refresh Deal
-            </button>
-          </div>
-        </aside>
+              <div className="pd-meta-item">
+                <span className="pd-meta-label">Gender</span>
+                <span className="pd-meta-value">{p.gender || "Unisex"}</span>
+              </div>
+
+              <div className="pd-meta-item">
+                <span className="pd-meta-label">ID</span>
+                <span className="pd-meta-value">#{p._id.slice(-6)}</span>
+              </div>
+            </div>
+
+            <div className="pd-cta">
+              <a
+                className="pd-btn pd-btn-primary"
+                href={p.productUrl}
+                target="_blank"
+                rel="noreferrer"
+              >
+                View on Store
+              </a>
+
+              <button
+                className="pd-btn pd-btn-secondary"
+                onClick={() => {
+                  setAlertOpen(true);
+                  setTargetPrice(p.price);
+                }}
+              >
+                Monitor Price
+              </button>
+
+              <button
+                className="pd-btn pd-btn-ghost"
+                onClick={() => qc.invalidateQueries(["product", id])}
+              >
+                Refresh Deal
+              </button>
+            </div>
+          </aside>
+        </div>
       </div>
 
       <section className="pd-similar">
-        <h2 className="pd-section-title">Similar Drops</h2>
-        <p className="pd-section-sub">
-          Deals you might have missed in {p.category}
-        </p>
-        <div className="pd-similar-grid">
-          {similarItems
-            .filter((x) => x._id !== p._id)
-            .slice(0, 4)
-            .map((x) => (
-              <Link key={x._id} to={`/products/${x._id}`} className="pd-card">
-                <div className="pd-card-img">
-                  <img src={x.image} alt={x.title} />
-                  {x.discountPercent && (
-                    <span className="pd-card-badge">-{x.discountPercent}%</span>
-                  )}
-                </div>
-                <div className="pd-card-title">{x.title}</div>
-                <div className="pd-card-now">
-                  {formatMoney(x.currency, x.price)}
-                </div>
-              </Link>
-            ))}
+        <div className="pd-container">
+          <h2 className="pd-section-title">Similar Drops</h2>
+          <p className="pd-section-sub">
+            Deals you might have missed in {p.category}
+          </p>
+
+          <div className="pd-similar-grid">
+            {similarItems
+              .filter((x) => x._id !== p._id)
+              .slice(0, 4)
+              .map((x) => (
+                <Link key={x._id} to={`/products/${x._id}`} className="pd-card">
+                  <div className="pd-card-img">
+                    <img src={x.image} alt={x.title} loading="lazy" />
+                    {x.discountPercent ? (
+                      <span className="pd-card-badge">
+                        -{x.discountPercent}%
+                      </span>
+                    ) : null}
+                  </div>
+                  <div className="pd-card-title">{x.title}</div>
+                  <div className="pd-card-now">
+                    {formatMoney(x.currency, x.price)}
+                  </div>
+                </Link>
+              ))}
+          </div>
         </div>
       </section>
 
@@ -285,6 +309,7 @@ const ProductDetailsPage = () => {
                 <span className="material-symbols-outlined">close</span>
               </button>
             </div>
+
             <div className="pd-modal-tabs">
               {["price", "percent", "stock"].map((t) => (
                 <button
@@ -296,6 +321,7 @@ const ProductDetailsPage = () => {
                 </button>
               ))}
             </div>
+
             <div className="pd-modal-body">
               {alertType === "price" && (
                 <div className="pd-field">
@@ -311,6 +337,7 @@ const ProductDetailsPage = () => {
                   </div>
                 </div>
               )}
+
               {alertType === "percent" && (
                 <div className="pd-field">
                   <label className="pd-label">Notify on drop of:</label>
@@ -325,15 +352,18 @@ const ProductDetailsPage = () => {
                   </div>
                 </div>
               )}
+
               {alertType === "stock" && (
                 <p className="pd-hint">
                   We'll ping you as soon as inventory is detected.
                 </p>
               )}
             </div>
+
             <button className="pd-btn pd-btn-primary" onClick={saveAlert}>
               Activate Tracker
             </button>
+
             {alertSaved && (
               <div className="pd-toast-inline">Tracker Active</div>
             )}

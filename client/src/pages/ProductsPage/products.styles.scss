@@ -1,11 +1,17 @@
-/* client/src/pages/ProductsPage/products.styles.scss */
-
-// Variables
 $accent-yellow: #f3d55b;
 $nero: #0d0f10;
 $glass: rgba(255, 255, 255, 0.03);
 $glass-border: rgba(255, 255, 255, 0.08);
 $text-muted: #888;
+
+/* ✅ same container as header */
+.pp-container {
+  width: min(
+    var(--pp-container-max, 1300px),
+    calc(100% - (var(--pp-container-pad, 16px) * 2))
+  );
+  margin: 0 auto;
+}
 
 .pp-products {
   width: 100%;
@@ -14,10 +20,10 @@ $text-muted: #888;
   min-height: 100vh;
 }
 
-// Modern Sticky Toolbar
+/* ✅ sticks exactly under header */
 .pp-toolbar {
   position: sticky;
-  top: var(--pp-header-h, 68px);
+  top: var(--pp-header-h, 72px);
   z-index: 50;
   padding: 16px 0;
   background: rgba(13, 15, 16, 0.8);
@@ -31,7 +37,6 @@ $text-muted: #888;
   gap: 20px;
 }
 
-// Segmented Control (Gender)
 .pp-genderbar {
   display: inline-flex;
   background: rgba(255, 255, 255, 0.05);
@@ -59,7 +64,6 @@ $text-muted: #888;
   }
 }
 
-// Horizontal Category Pills
 .pp-catbar {
   display: flex;
   gap: 10px;
@@ -84,7 +88,6 @@ $text-muted: #888;
   cursor: pointer;
   transition: 0.2s;
 
-  // ✅ Active styling now matches gender segmented control (white bg, black text)
   &.is-active {
     background: #fff;
     color: #000;
@@ -92,7 +95,6 @@ $text-muted: #888;
   }
 }
 
-// Sort & Results Meta
 .pp-meta-row {
   display: flex;
   justify-content: space-between;
@@ -119,7 +121,6 @@ $text-muted: #888;
   outline: none;
 }
 
-// The Editorial Grid (✅ 2 columns on mobile)
 .pp-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -127,7 +128,6 @@ $text-muted: #888;
   padding: 30px 0;
 }
 
-// Optional: 1 column on super small devices
 @media (max-width: 360px) {
   .pp-grid {
     grid-template-columns: 1fr;
@@ -215,7 +215,6 @@ $text-muted: #888;
   text-decoration: line-through;
 }
 
-// Pager
 .pp-pager {
   display: flex;
   justify-content: center;
@@ -241,7 +240,6 @@ $text-muted: #888;
   }
 }
 
-// Breakpoints
 @media (min-width: 600px) {
   .pp-grid {
     grid-template-columns: repeat(3, 1fr);

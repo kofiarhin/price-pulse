@@ -10,7 +10,7 @@ const Footer = () => {
       <div className="pp-footer-container">
         <div className="pp-footer-top">
           <div className="pp-footer-brand">
-            <div className="pp-footer-logo">PRICEPULSE</div>
+            <div className="pp-footer-logo">BANGING PRICES</div>
             <p className="pp-footer-tagline">
               Premium price intelligence for modern curators.
             </p>
@@ -73,7 +73,7 @@ const Footer = () => {
           </div>
 
           <div className="pp-footer-copy">
-            &copy; {year} PricePulse / Built by DevKofi.
+            &copy; {year} Banging Prices / Built by DevKofi.
           </div>
         </div>
       </div>
