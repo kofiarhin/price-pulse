@@ -1,4 +1,5 @@
-import { useMemo, useState } from "react";
+/* client/src/pages/HomePage/HomePage.jsx */
+import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import "./home-page.styles.scss";
 
@@ -6,127 +7,95 @@ const HomePage = () => {
   const navigate = useNavigate();
   const [search, setSearch] = useState("");
 
-  const tiles = useMemo(
-    () => [
-      {
-        key: "daily-deals",
-        title: "Flash Sales",
-        sub: "Live markdowns from ASOS, Zara, and top retailers updated hourly.",
-        icon: "bolt",
-        to: "/products?sort=discount-desc&inStock=true",
-      },
-      {
-        key: "biggest-discounts",
-        title: "Deep Drops",
-        sub: "Items with the most significant price adjustments across the UK.",
-        icon: "trending_down",
-        to: "/products?sort=discount-desc",
-      },
-      {
-        key: "under-20",
-        title: "Value Finds",
-        sub: "High-quality fashion picks curated for under £20.",
-        icon: "payments",
-        to: "/products?maxPrice=20&sort=price-asc",
-      },
-    ],
-    [],
-  );
+  const sections = [
+    {
+      id: "flash",
+      title: "Flash Sales",
+      desc: "Live markdowns from top UK retailers updated in real-time.",
+      icon: "bolt",
+      path: "/products?sort=discount-desc"
+    },
+    {
+      id: "drops",
+      title: "Deep Drops",
+      desc: "Massive price corrections detected by our tracking engine.",
+      icon: "trending_down",
+      path: "/products?minDiscount=50"
+    },
+    {
+      id: "curated",
+      title: "Under £20",
+      desc: "Premium fashion aesthetics curated for the budget-conscious.",
+      icon: "auto_awesome",
+      path: "/products?maxPrice=20"
+    }
+  ];
 
-  const onSearch = (e) => {
+  const handleSearch = (e) => {
     e.preventDefault();
-    const q = search.trim();
-    if (!q) return;
-    navigate(`/products?search=${encodeURIComponent(q)}&status=active`);
+    if (!search.trim()) return;
+    navigate(`/products?q=${encodeURIComponent(search.trim())}`);
   };
 
   return (
     <main className="home-page">
       <div className="home-page-container">
         <header className="home-page-header">
-          <button className="home-page-brand" onClick={() => navigate("/")}>
-            BANGINGPRICES
-          </button>
-
-          <div className="home-page-nav-actions">
-            <button
-              className="home-page-icon-btn"
-              onClick={() => navigate("/products")}
-              aria-label="Browse products"
-              title="Browse products"
-            >
-              <span className="material-symbols-outlined">storefront</span>
-            </button>
-
-            <button
-              className="home-page-icon-btn"
-              onClick={() => navigate("/products")}
-              aria-label="Favorites"
-            >
-              <span className="material-symbols-outlined">favorite</span>
-            </button>
-
-            <button
-              className="home-page-icon-btn"
-              onClick={() => navigate("/products")}
-              aria-label="Profile"
-            >
-              <span className="material-symbols-outlined">person</span>
-            </button>
+          <div className="home-page-brand" onClick={() => navigate("/")}>
+            BANGINGPRICES / ARCHIVE
           </div>
+          <nav className="home-page-nav-actions">
+            <button className="home-page-icon-btn" onClick={() => navigate("/products")}>
+              <span className="material-symbols-outlined">grid_view</span>
+            </button>
+          </nav>
         </header>
 
         <section className="home-page-hero">
-          <span className="home-page-badge">Real-time Tracker</span>
+          <span className="home-page-badge">V2.6 Live Engine</span>
           <h1 className="home-page-title">
-            Smart Fashion <br /> Intelligence.
+            The Future of <br /> <span>Shopping Logic.</span>
           </h1>
           <p className="home-page-sub">
-            We track thousands of products across major UK retailers to find
-            hidden price drops. Never pay full price again.
+            High-performance price tracking for the UK's biggest fashion retailers. 
+            Data-driven savings, delivered in real-time.
           </p>
 
           <div className="home-page-search-wrap">
-            <form className="home-page-search" onSubmit={onSearch}>
+            <form className="home-page-search" onSubmit={handleSearch}>
               <input
                 className="home-page-search-input"
-                placeholder="Search brands or items..."
+                placeholder="Search brand, category, or trend..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
               />
               <button className="home-page-search-btn" type="submit">
-                <span className="material-symbols-outlined">search</span>
+                <span className="material-symbols-outlined">arrow_outward</span>
               </button>
             </form>
           </div>
-
-          {/* ✅ Browse Products link */}
+          
           <div className="home-page-cta-row">
             <Link to="/products" className="home-page-browse-link">
-              Browse Products
-              <span className="material-symbols-outlined">arrow_forward</span>
+              Explore Intelligence
+              <span className="material-symbols-outlined">chevron_right</span>
             </Link>
           </div>
         </section>
 
-        <span className="home-page-label">Curated Discovery</span>
-
-        <section className="home-page-tiles" aria-label="Quick actions">
-          {tiles.map((t) => (
-            <button
-              key={t.key}
-              className="home-page-tile"
-              type="button"
-              onClick={() => navigate(t.to)}
+        <section className="home-page-tiles">
+          {sections.map((item) => (
+            <div 
+              key={item.id} 
+              className="home-page-tile" 
+              onClick={() => navigate(item.path)}
             >
-              <div className="home-page-tile-icon">
-                <span className="material-symbols-outlined">{t.icon}</span>
-              </div>
-              <div className="home-page-tile-info">
-                <div className="home-page-tile-title">{t.title}</div>
-                <div className="home-page-tile-sub">{t.sub}</div>
-              </div>
-            </button>
+              <span className="material-symbols-outlined home-page-tile-icon">
+                {item.icon}
+              </span>
+              <h3 className="home-page-tile-title">{item.title}</h3>
+              <p className="home-page-tile-sub">{item.desc}</p>
+            </div>
           ))}
         </section>
       </div>
