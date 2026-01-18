@@ -7,31 +7,17 @@ const HomePage = () => {
   const navigate = useNavigate();
   const [search, setSearch] = useState("");
 
-  const sections = [
+  const tiles = [
     {
       id: "flash",
       title: "Flash Sales",
-      desc: "Live markdowns from top UK retailers updated in real-time.",
+      sub: "Live markdowns from top UK retailers updated in real-time.",
       icon: "bolt",
-      path: "/products?sort=discount-desc"
-    },
-    {
-      id: "drops",
-      title: "Deep Drops",
-      desc: "Massive price corrections detected by our tracking engine.",
-      icon: "trending_down",
-      path: "/products?minDiscount=50"
-    },
-    {
-      id: "curated",
-      title: "Under £20",
-      desc: "Premium fashion aesthetics curated for the budget-conscious.",
-      icon: "auto_awesome",
-      path: "/products?maxPrice=20"
+      to: "/products?sort=discount-desc"
     }
   ];
 
-  const handleSearch = (e) => {
+  const onSearch = (e) => {
     e.preventDefault();
     if (!search.trim()) return;
     navigate(`/products?q=${encodeURIComponent(search.trim())}`);
@@ -41,14 +27,12 @@ const HomePage = () => {
     <main className="home-page">
       <div className="home-page-container">
         <header className="home-page-header">
-          <div className="home-page-brand" onClick={() => navigate("/")}>
+          <button className="home-page-brand" onClick={() => navigate("/")}>
             BANGINGPRICES / ARCHIVE
-          </div>
-          <nav className="home-page-nav-actions">
-            <button className="home-page-icon-btn" onClick={() => navigate("/products")}>
-              <span className="material-symbols-outlined">grid_view</span>
-            </button>
-          </nav>
+          </button>
+          <button className="home-page-icon-btn" onClick={() => navigate("/products")}>
+            <span className="material-symbols-outlined">grid_view</span>
+          </button>
         </header>
 
         <section className="home-page-hero">
@@ -62,7 +46,7 @@ const HomePage = () => {
           </p>
 
           <div className="home-page-search-wrap">
-            <form className="home-page-search" onSubmit={handleSearch}>
+            <form className="home-page-search" onSubmit={onSearch}>
               <input
                 className="home-page-search-input"
                 placeholder="Search brand, category, or trend..."
@@ -70,11 +54,11 @@ const HomePage = () => {
                 onChange={(e) => setSearch(e.target.value)}
               />
               <button className="home-page-search-btn" type="submit">
-                <span className="material-symbols-outlined">arrow_outward</span>
+                <span className="material-symbols-outlined">north_east</span>
               </button>
             </form>
           </div>
-          
+
           <div className="home-page-cta-row">
             <Link to="/products" className="home-page-browse-link">
               Explore Intelligence
@@ -84,17 +68,13 @@ const HomePage = () => {
         </section>
 
         <section className="home-page-tiles">
-          {sections.map((item) => (
-            <div 
-              key={item.id} 
-              className="home-page-tile" 
-              onClick={() => navigate(item.path)}
-            >
+          {tiles.map((t) => (
+            <div key={t.id} className="home-page-tile" onClick={() => navigate(t.to)}>
               <span className="material-symbols-outlined home-page-tile-icon">
-                {item.icon}
+                {t.icon}
               </span>
-              <h3 className="home-page-tile-title">{item.title}</h3>
-              <p className="home-page-tile-sub">{item.desc}</p>
+              <h3 className="home-page-tile-title">{t.title}</h3>
+              <p className="home-page-tile-sub">{t.sub}</p>
             </div>
           ))}
         </section>
