@@ -1,7 +1,7 @@
 /* client/src/pages/HomePage/home-page.styles.scss */
 
 $accent-yellow: #f3d55b;
-$accent-blue: #007aff; // Match the icon button in your screenshot
+$accent-blue: #007aff; 
 $nero: #050607;
 $glass: rgba(255, 255, 255, 0.03);
 $glass-border: rgba(255, 255, 255, 0.1);
@@ -20,7 +20,7 @@ $glass-border: rgba(255, 255, 255, 0.1);
   min-height: 100vh;
   background: radial-gradient(circle at 50% -20%, #1a1c1e 0%, $nero 100%);
   color: #fff;
-  padding-bottom: 80px;
+  padding-bottom: 100px;
   animation: pageReveal 0.8s ease-out;
 }
 
@@ -48,7 +48,30 @@ $glass-border: rgba(255, 255, 255, 0.1);
   cursor: pointer;
 }
 
-/* Hero */
+.home-page-nav-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.home-page-icon-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  border: 1px solid $glass-border;
+  background: $glass;
+  color: #fff;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.2);
+  }
+}
+
+/* Hero Section */
 .home-page-hero {
   padding: 80px 0 40px;
 
@@ -85,7 +108,7 @@ $glass-border: rgba(255, 255, 255, 0.1);
   }
 }
 
-/* 🚀 FIXED SEARCH STYLING */
+/* Search Wrap */
 .home-page-search-wrap {
   margin-top: 48px;
   max-width: 500px;
@@ -95,9 +118,9 @@ $glass-border: rgba(255, 255, 255, 0.1);
 .home-page-search {
   display: flex;
   align-items: center;
-  background: #111; // Solid dark base
+  background: #111; 
   border: 1px solid $glass-border;
-  padding: 6px; // Space for the button
+  padding: 6px; 
   border-radius: 12px;
   transition: all 0.3s ease;
 
@@ -109,7 +132,7 @@ $glass-border: rgba(255, 255, 255, 0.1);
 
 .home-page-search-input {
   flex: 1;
-  background: transparent; // Fixed the white background issue
+  background: transparent;
   border: none;
   outline: none;
   color: #fff;
@@ -117,9 +140,7 @@ $glass-border: rgba(255, 255, 255, 0.1);
   padding: 0 16px;
   height: 44px;
 
-  &::placeholder {
-    color: #555;
-  }
+  &::placeholder { color: #555; }
 }
 
 .home-page-search-btn {
@@ -136,11 +157,9 @@ $glass-border: rgba(255, 255, 255, 0.1);
 
   &:hover {
     transform: scale(1.05);
-    background: lighten($accent-blue, 5%);
   }
 }
 
-/* CTA */
 .home-page-cta-row {
   margin-top: 32px;
   animation: textSlideUp 0.6s ease-out 0.4s backwards;
@@ -154,7 +173,7 @@ $glass-border: rgba(255, 255, 255, 0.1);
   text-decoration: none;
   font-weight: 700;
   font-size: 15px;
-  
+
   .material-symbols-outlined {
     font-size: 18px;
     transition: transform 0.3s ease;
@@ -165,25 +184,38 @@ $glass-border: rgba(255, 255, 255, 0.1);
   }
 }
 
-/* Tiles */
-.home-page-tiles {
+/* Tiles Section */
+.home-page-label {
+  display: block;
   margin-top: 80px;
+  font-size: 11px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: #444;
+  animation: textSlideUp 0.6s ease-out 0.5s backwards;
+}
+
+.home-page-tiles {
+  margin-top: 32px;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 20px;
 }
 
 .home-page-tile {
-  background: rgba(255,255,255, 0.02);
+  background: rgba(255, 255, 255, 0.02);
   border: 1px solid $glass-border;
   padding: 40px;
   border-radius: 16px;
   text-align: left;
   cursor: pointer;
   transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
 
   &:hover {
-    background: rgba(255,255,255, 0.05);
+    background: rgba(255, 255, 255, 0.05);
     transform: translateY(-8px);
     border-color: rgba($accent-yellow, 0.4);
   }
@@ -192,17 +224,17 @@ $glass-border: rgba(255, 255, 255, 0.1);
 .home-page-tile-icon {
   color: $accent-yellow;
   font-size: 32px;
-  margin-bottom: 20px;
+  margin-bottom: 24px;
 }
 
 .home-page-tile-title {
   font-size: 22px;
   font-weight: 800;
-  margin-bottom: 8px;
+  margin-bottom: 12px;
 }
 
 .home-page-tile-sub {
   color: #666;
   font-size: 15px;
-  line-height: 1.5;
+  line-height: 1.6;
 }
