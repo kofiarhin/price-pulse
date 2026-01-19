@@ -100,7 +100,7 @@ const sanitizeProducts = (products = [], { storeKey, fallbackSaleUrl }) => {
         !out.image ||
         !isPdpUrl(out.productUrl)
       ) {
-        return null;
+        return null; // will remove this later
       }
 
       return out;
