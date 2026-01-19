@@ -114,6 +114,3 @@ Smart Tracking
 For Sharp Dressers
 The elite price engine for UK fashion. Get notified before the stock
 
-id
-869907485329-2aeesgga6pjltchf6qqi9qkkj2oucp23.apps.googleusercontent.com
-secret
