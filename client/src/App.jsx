@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import { SignedIn, SignedOut, RedirectToSignIn } from "@clerk/clerk-react";
 
 import Header from "./components/Header.jsx";
@@ -30,8 +30,33 @@ const App = () => {
       <Routes>
         <Route path="/" element={<HomePage />} />
 
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/register" element={<RegisterPage />} />
+        <Route
+          path="/login"
+          element={
+            <>
+              <SignedIn>
+                <Navigate to="/dashboard" replace />
+              </SignedIn>
+              <SignedOut>
+                <LoginPage />
+              </SignedOut>
+            </>
+          }
+        />
+
+        <Route
+          path="/register"
+          element={
+            <>
+              <SignedIn>
+                <Navigate to="/dashboard" replace />
+              </SignedIn>
+              <SignedOut>
+                <RegisterPage />
+              </SignedOut>
+            </>
+          }
+        />
 
         <Route
           path="/dashboard"
