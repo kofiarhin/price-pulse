@@ -1,30 +1,15 @@
-$accent-yellow: #f3d55b;
-$nero: #050607;
-$glass-border: rgba(255, 255, 255, 0.08);
-
-/* ✅ shared layout tokens */
-:root {
-  --pp-container-max: 1300px;
-  --pp-container-pad: 16px; /* left/right gutter */
-  --pp-header-h: 72px;
-}
-
-@media (max-width: 480px) {
-  :root {
-    --pp-header-h: 64px;
-  }
-}
+/* client/src/components/header.styles.scss */
 
 .phd-header {
   position: sticky;
   top: 0;
   z-index: 1000;
-  background: rgba($nero, 0.95);
-  backdrop-filter: blur(20px);
-  border-bottom: 1px solid $glass-border;
   height: var(--pp-header-h);
   display: flex;
   align-items: center;
+  background: rgba(var(--pp-nero-rgb), 0.95);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--pp-glass-border);
 }
 
 .phd-header-container {
@@ -43,7 +28,7 @@ $glass-border: rgba(255, 255, 255, 0.08);
   font-weight: 900;
   font-size: 20px;
   letter-spacing: -0.02em;
-  color: #fff;
+  color: var(--pp-white);
   text-decoration: none;
   flex-shrink: 0;
   z-index: 10;
@@ -55,66 +40,78 @@ $glass-border: rgba(255, 255, 255, 0.08);
   max-width: 500px;
   margin: 0 20px;
   transition: all 0.3s ease;
+}
 
-  @media (max-width: 850px) {
+@media (max-width: 850px) {
+  .phd-search-wrapper {
     display: none;
+  }
 
-    &.is-open {
-      display: block;
-      position: absolute;
-      top: 50%;
-      left: 0;
-      transform: translateY(-50%);
-      width: 100%;
-      max-width: none;
-      margin: 0;
-      z-index: 20;
-      background: $nero;
-    }
+  .phd-search-wrapper.is-open {
+    display: block;
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    z-index: 20;
+    background: rgb(var(--pp-nero-rgb));
   }
 }
 
 .phd-search-bar {
   display: flex;
   align-items: center;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid $glass-border;
-  border-radius: 12px;
-  padding: 0 12px;
   height: 44px;
+  padding: 0 12px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--pp-glass-border);
+}
 
-  &:focus-within {
-    border-color: $accent-yellow;
-  }
+.phd-search-bar:focus-within {
+  border-color: var(--pp-accent-yellow);
+}
+
+.phd-search-icon-prefix {
+  display: grid;
+  place-items: center;
+  margin-right: 10px;
+  color: var(--pp-white);
+  opacity: 0.9;
 }
 
 .phd-input {
   flex: 1;
-  background: transparent;
-  border: none;
-  color: #fff;
-  font-size: 16px;
-  outline: none;
   width: 100%;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: var(--pp-white);
+  font-size: 16px;
 }
 
 .phd-search-close {
   background: transparent;
   border: none;
-  color: #fff;
+  color: var(--pp-white);
   padding: 8px;
   cursor: pointer;
 }
 
 .phd-search-kbd {
   font-size: 10px;
-  color: #555;
+  color: rgba(255, 255, 255, 0.35);
   background: rgba(255, 255, 255, 0.05);
   padding: 2px 4px;
   border-radius: 4px;
   margin-left: 8px;
+}
 
-  @media (max-width: 1024px) {
+@media (max-width: 1024px) {
+  .phd-search-kbd {
     display: none;
   }
 }
@@ -131,33 +128,65 @@ $glass-border: rgba(255, 255, 255, 0.08);
 .phd-action-btn {
   background: transparent;
   border: none;
-  color: #fff;
+  color: var(--pp-white);
   cursor: pointer;
   width: 40px;
   height: 40px;
   display: grid;
   place-items: center;
+}
 
-  &.mobile-only {
-    display: none;
+.phd-action-btn.mobile-only {
+  display: none;
+}
 
-    @media (max-width: 850px) {
-      display: grid;
-    }
+@media (max-width: 850px) {
+  .phd-action-btn.mobile-only {
+    display: grid;
   }
+}
+
+.phd-profile-trigger {
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
 }
 
 .phd-avatar {
   width: 36px;
   height: 36px;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid $glass-border;
   border-radius: 10px;
   display: grid;
   place-items: center;
-  color: #fff;
+  color: var(--pp-white);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--pp-glass-border);
 }
 
+/* Auth (Clerk) */
+.phd-userbtn {
+  display: grid;
+  place-items: center;
+}
+
+.phd-auth-btn {
+  height: 40px;
+  padding: 0 12px;
+  border-radius: 12px;
+  border: 1px solid var(--pp-glass-border);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--pp-white);
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.phd-auth-btn.is-primary {
+  background: rgba(var(--pp-accent-yellow-rgb), 0.15);
+  border-color: rgba(var(--pp-accent-yellow-rgb), 0.35);
+}
+
+/* Mobile tweaks */
 @media (max-width: 480px) {
   .phd-logo {
     font-size: 18px;

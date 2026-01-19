@@ -1,0 +1,52 @@
+$nero: #050607;
+$glass-border: rgba(255, 255, 255, 0.08);
+
+.pp-auth {
+  min-height: calc(100vh - var(--pp-header-h));
+  background: $nero;
+  padding: 24px 0;
+}
+
+.pp-auth-container {
+  width: min(520px, calc(100% - 32px));
+  margin: 0 auto;
+}
+
+.pp-auth-card {
+  border: 1px solid $glass-border;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 18px;
+  padding: 18px;
+}
+
+.pp-auth-title {
+  color: #fff;
+  font-size: 22px;
+  letter-spacing: -0.02em;
+  margin: 0 0 6px;
+}
+
+.pp-auth-subtitle {
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 14px;
+  margin: 0 0 14px;
+}
+
+.pp-auth-box {
+  display: grid;
+  gap: 12px;
+}
+
+@media (min-width: 768px) {
+  .pp-auth {
+    padding: 40px 0;
+  }
+
+  .pp-auth-card {
+    padding: 22px;
+  }
+
+  .pp-auth-title {
+    font-size: 26px;
+  }
+}

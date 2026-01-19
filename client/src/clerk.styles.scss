@@ -1,0 +1,143 @@
+/* client/src/clerk.styles.scss */
+
+.pp-clerk-cardbox {
+  width: 100%;
+  display: grid;
+  place-items: center;
+  padding: 16px;
+}
+
+@media (min-width: 480px) {
+  .pp-clerk-cardbox {
+    padding: 22px;
+  }
+}
+
+.pp-clerk-card {
+  width: 100%;
+  max-width: 420px;
+  border-radius: 18px;
+  border: 1px solid var(--pp-glass-border);
+  background: rgba(255, 255, 255, 0.03);
+  box-shadow: 0 20px 80px rgba(0, 0, 0, 0.45);
+  padding: 18px;
+}
+
+@media (min-width: 480px) {
+  .pp-clerk-card {
+    padding: 22px;
+  }
+}
+
+.pp-clerk-title {
+  color: var(--pp-white);
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  font-size: 22px;
+  margin: 0 0 6px;
+}
+
+.pp-clerk-subtitle {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 14px;
+  margin: 0 0 16px;
+}
+
+.pp-clerk-label {
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 13px;
+  margin-bottom: 6px;
+}
+
+.pp-clerk-input {
+  height: 46px;
+  width: 100%;
+  border-radius: 12px;
+  border: 1px solid var(--pp-glass-border);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--pp-white);
+  padding: 0 12px;
+  outline: none;
+}
+
+.pp-clerk-input:focus {
+  border-color: rgba(var(--pp-accent-yellow-rgb), 0.55);
+  box-shadow: 0 0 0 4px rgba(var(--pp-accent-yellow-rgb), 0.12);
+}
+
+.pp-clerk-primary-btn {
+  height: 46px;
+  width: 100%;
+  border-radius: 12px;
+  border: 1px solid rgba(var(--pp-accent-yellow-rgb), 0.35);
+  background: rgba(var(--pp-accent-yellow-rgb), 0.16);
+  color: var(--pp-white);
+  cursor: pointer;
+  font-weight: 800;
+}
+
+.pp-clerk-primary-btn:hover {
+  background: rgba(var(--pp-accent-yellow-rgb), 0.22);
+}
+
+.pp-clerk-social-btn {
+  height: 46px;
+  width: 100%;
+  border-radius: 12px;
+  border: 1px solid var(--pp-glass-border);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--pp-white);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.pp-clerk-social-btn:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.pp-clerk-social-btn-text {
+  color: var(--pp-white);
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.pp-clerk-divider-line {
+  background: rgba(255, 255, 255, 0.08);
+  height: 1px;
+}
+
+.pp-clerk-divider-text {
+  color: rgba(255, 255, 255, 0.45);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.pp-clerk-footer-text {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 13px;
+}
+
+.pp-clerk-footer-link {
+  color: rgba(var(--pp-accent-yellow-rgb), 0.95);
+  text-decoration: none;
+  font-weight: 800;
+  font-size: 13px;
+}
+
+.pp-clerk-footer-link:hover {
+  text-decoration: underline;
+}
+
+.pp-clerk-muted {
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 13px;
+}
+
+.pp-clerk-error {
+  color: rgba(239, 68, 68, 1);
+  font-size: 12px;
+  margin-top: 6px;
+}
