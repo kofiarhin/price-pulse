@@ -23,12 +23,14 @@ const fetchCategories = async (gender) => {
 const ProductsPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
+
   const params = useMemo(
     () => new URLSearchParams(location.search),
     [location.search],
   );
 
   // State from URL
+  const search = params.get("search") || "";
   const gender = params.get("gender") || "";
   const category = params.get("category") || "";
   const sort = params.get("sort") || "newest";
@@ -41,17 +43,27 @@ const ProductsPage = () => {
   });
 
   const { data, isLoading } = useQuery({
-    queryKey: ["products", gender, category, sort, page],
-    queryFn: () => fetchProducts({ gender, category, sort, page, limit: 24 }),
+    queryKey: ["products", search, gender, category, sort, page],
+    queryFn: () =>
+      fetchProducts({
+        search,
+        gender,
+        category,
+        sort,
+        page,
+        limit: 24,
+      }),
     keepPreviousData: true,
   });
 
   const setParam = (updates) => {
     const next = new URLSearchParams(location.search);
+
     Object.entries(updates).forEach(([k, v]) => {
-      if (!v) next.delete(k);
-      else next.set(k, v);
+      if (v === undefined || v === null || v === "") next.delete(k);
+      else next.set(k, String(v));
     });
+
     navigate(`/products?${next.toString()}`);
   };
 
