@@ -67,23 +67,9 @@ const App = () => {
           }
         />
 
-        <Route
-          path="/products"
-          element={
-            <Protected>
-              <ProductsPage />
-            </Protected>
-          }
-        />
+        <Route path="/products" element={<ProductsPage />} />
 
-        <Route
-          path="/products/:id"
-          element={
-            <Protected>
-              <ProductDetailsPage />
-            </Protected>
-          }
-        />
+        <Route path="/products/:id" element={<ProductDetailsPage />} />
       </Routes>
     </>
   );
